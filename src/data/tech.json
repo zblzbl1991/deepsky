@@ -1,0 +1,42 @@
+[
+  {
+    "id": "improvedMining",
+    "name": "Improved Mining Techniques",
+    "description": "Deep core extraction methods from the Adeptus Mechanicus.",
+    "cost": { "tech": 100 },
+    "effect": { "buildingBonus": { "mine": 0.5 } },
+    "prerequisites": []
+  },
+  {
+    "id": "plasmaEfficiency",
+    "name": "Plasma Efficiency",
+    "description": "Optimize plasma generator output. The Machine God approves.",
+    "cost": { "tech": 150 },
+    "effect": { "buildingBonus": { "powerPlant": 0.5 } },
+    "prerequisites": []
+  },
+  {
+    "id": "xenoAnalysis",
+    "name": "Xenos Bio-Analysis",
+    "description": "Study alien biology to better combat the tyranid threat.",
+    "cost": { "tech": 300 },
+    "effect": { "combatBonus": { "attack": 5 } },
+    "prerequisites": ["improvedMining"]
+  },
+  {
+    "id": "voidShielding",
+    "name": "Void Shielding",
+    "description": "Personal void shields for expeditions.",
+    "cost": { "tech": 400 },
+    "effect": { "combatBonus": { "defense": 5 } },
+    "prerequisites": ["plasmaEfficiency"]
+  },
+  {
+    "id": "warpDrive",
+    "name": "Warp Drive Mk II",
+    "description": "Improved warp drives reduce energy costs for interstellar travel.",
+    "cost": { "tech": 500, "relics": 1 },
+    "effect": { "energyDiscount": 0.25 },
+    "prerequisites": ["xenoAnalysis", "voidShielding"]
+  }
+]
