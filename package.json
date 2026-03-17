@@ -1,14 +1,21 @@
 {
-  "name": "deepSky",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
+  "name": "deep-sky",
+  "version": "0.1.0",
+  "type": "module",
   "scripts": {
-    "build": "tsc"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "idb-keyval": "^6.2.2"
+  },
   "devDependencies": {
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vite": "^8.0.0",
+    "vitest": "^4.1.0"
   },
   "private": true
 }
