@@ -113,3 +113,36 @@ body {
 .upgrade-btn:hover:not(:disabled) { background: #2a2a4e; }
 .upgrade-btn:disabled { color: #444; border-color: #333; cursor: not-allowed; }
 .building-card.locked { opacity: 0.5; }
+
+/* Shipyard */
+#shipyard-panel { margin-bottom: 20px; }
+
+.ship-card {
+  background: #12121f;
+  border: 1px solid #1e1e3a;
+  padding: 14px;
+  margin-bottom: 8px;
+}
+.ship-card.built { border-color: #4a8; }
+.ship-name { color: #c9a84c; font-size: 1rem; letter-spacing: 1px; }
+.ship-desc { color: #555; font-size: 0.75rem; font-style: italic; margin: 4px 0 8px; }
+.ship-cost { color: #888; font-size: 0.8rem; margin-bottom: 8px; }
+.ship-status { font-size: 0.8rem; margin-bottom: 8px; }
+.ship-status.built { color: #4a8; }
+.ship-status.locked { color: #888; }
+
+/* Planets */
+.planet-card {
+  background: #12121f;
+  border: 1px solid #1e1e3a;
+  padding: 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.planet-card:hover:not(.locked) { border-color: #c9a84c; }
+.planet-card.locked { opacity: 0.4; cursor: not-allowed; }
+.planet-header { display: flex; justify-content: space-between; align-items: center; }
+.planet-name { color: #c9a84c; font-size: 1rem; letter-spacing: 1px; }
+.planet-danger { color: #c44; font-size: 0.75rem; letter-spacing: 1px; }
+.planet-desc { color: #555; font-size: 0.75rem; font-style: italic; margin: 4px 0 8px; }
+.planet-info { color: #888; font-size: 0.8rem; }

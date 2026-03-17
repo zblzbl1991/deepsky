@@ -3,6 +3,7 @@ import { GameLoop } from './game/gameLoop.js';
 import { SaveManager } from './game/saveManager.js';
 import { createUIManager } from './ui/uiManager.js';
 import { renderIdleView } from './idle/idleView.js';
+import { renderStarMapView } from './starmap/starMapView.js';
 
 async function init() {
   const state = createGameState();
@@ -36,6 +37,11 @@ async function init() {
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       if (view === 'idle') renderIdleView(state);
+      if (view === 'starmap') {
+        renderStarMapView(state, (planetId) => {
+          console.log('Launching expedition to:', planetId);
+        });
+      }
     });
   });
 
