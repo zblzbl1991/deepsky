@@ -76,15 +76,49 @@
       </section>
     </div>
     <div id="view-dungeon" class="view">
-      <header id="header-dungeon">
-        <h1>IMPERIAL OUTPOST</h1>
-        <nav id="nav-dungeon">
+      <header id="header">
+        <h1>EXPEDITION</h1>
+        <nav id="nav">
           <button class="nav-btn" data-view="idle">Base</button>
           <button class="nav-btn" data-view="starmap">Star Map</button>
           <button class="nav-btn active" data-view="dungeon">Expedition</button>
         </nav>
       </header>
-      <p>Dungeon — Coming Soon</p>
+
+      <div id="dungeon-hud">
+        <span id="dungeon-floor">Floor 1</span>
+        <span id="dungeon-hp">HP: 100/100</span>
+        <span id="dungeon-atk">ATK: 10</span>
+        <span id="dungeon-def">DEF: 3</span>
+        <span id="dungeon-exp">EXP: 0</span>
+      </div>
+
+      <div id="dungeon-container">
+        <canvas id="dungeon-canvas"></canvas>
+      </div>
+
+      <div id="combat-panel" style="display:none">
+        <div id="combat-info"></div>
+        <div id="combat-log"></div>
+        <div id="combat-actions">
+          <button class="combat-btn" id="btn-attack">ATTACK</button>
+          <button class="combat-btn" id="btn-flee">FLEE</button>
+        </div>
+      </div>
+
+      <div id="dungeon-log"></div>
+
+      <div id="dungeon-controls">
+        <div class="control-row"><button class="move-btn" data-dir="up">&#9650;</button></div>
+        <div class="control-row">
+          <button class="move-btn" data-dir="left">&#9664;</button>
+          <button class="move-btn" data-dir="wait">&#9632;</button>
+          <button class="move-btn" data-dir="right">&#9654;</button>
+        </div>
+        <div class="control-row"><button class="move-btn" data-dir="down">&#9660;</button></div>
+      </div>
+
+      <div id="dungeon-result" style="display:none"></div>
     </div>
   </div>
   <script type="module" src="/src/main.ts"></script>
