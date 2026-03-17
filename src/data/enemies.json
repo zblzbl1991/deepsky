@@ -1,0 +1,74 @@
+[
+  {
+    "id": "grot",
+    "name": "Grot",
+    "type": "ork",
+    "hp": 15,
+    "attack": 3,
+    "defense": 1,
+    "exp": 5,
+    "minFloor": 1
+  },
+  {
+    "id": "orkBoy",
+    "name": "Ork Boy",
+    "type": "ork",
+    "hp": 30,
+    "attack": 6,
+    "defense": 2,
+    "exp": 12,
+    "minFloor": 1
+  },
+  {
+    "id": "gaunt",
+    "name": "Termagant",
+    "type": "tyranid",
+    "hp": 20,
+    "attack": 5,
+    "defense": 1,
+    "exp": 8,
+    "minFloor": 2
+  },
+  {
+    "id": "genestealer",
+    "name": "Genestealer",
+    "type": "tyranid",
+    "hp": 45,
+    "attack": 10,
+    "defense": 3,
+    "exp": 25,
+    "minFloor": 3
+  },
+  {
+    "id": "daemonette",
+    "name": "Daemonette",
+    "type": "chaos",
+    "hp": 50,
+    "attack": 12,
+    "defense": 4,
+    "exp": 35,
+    "minFloor": 4
+  },
+  {
+    "id": "warboss",
+    "name": "Warboss",
+    "type": "ork",
+    "hp": 100,
+    "attack": 15,
+    "defense": 8,
+    "exp": 100,
+    "minFloor": 3,
+    "isBoss": true
+  },
+  {
+    "id": "hiveTyrant",
+    "name": "Hive Tyrant",
+    "type": "tyranid",
+    "hp": 150,
+    "attack": 20,
+    "defense": 10,
+    "exp": 200,
+    "minFloor": 5,
+    "isBoss": true
+  }
+]

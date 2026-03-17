@@ -1,0 +1,44 @@
+[
+  {
+    "id": "chainsword",
+    "name": "Chainsword",
+    "type": "weapon",
+    "attack": 5,
+    "description": "A roaring blade of teeth and fury."
+  },
+  {
+    "id": "bolter",
+    "name": "Boltpistol",
+    "type": "weapon",
+    "attack": 8,
+    "description": "The Emperor's wrath in palm form."
+  },
+  {
+    "id": "plasmaGun",
+    "name": "Plasma Gun",
+    "type": "weapon",
+    "attack": 14,
+    "description": "Superheated death. Handle with reverence."
+  },
+  {
+    "id": "powerArmor",
+    "name": "Power Armour Fragment",
+    "type": "armor",
+    "defense": 5,
+    "description": "A piece of sacred ceramite."
+  },
+  {
+    "id": "medKit",
+    "name": "Medicae Kit",
+    "type": "consumable",
+    "heal": 30,
+    "description": "Restore 30 HP."
+  },
+  {
+    "id": "stcFragment",
+    "name": "STC Fragment",
+    "type": "relic",
+    "tech": 50,
+    "description": "A fragment of ancient knowledge."
+  }
+]
