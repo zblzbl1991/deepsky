@@ -1,0 +1,62 @@
+[
+  {
+    "id": "aridia",
+    "name": "Aridia Prime",
+    "type": "deadWorld",
+    "description": "A barren rock in the void. Mineral deposits stretch deep beneath the surface.",
+    "dangerLevel": 1,
+    "distance": 1,
+    "energyCost": 50,
+    "rewards": { "minerals": 500, "tech": 20 },
+    "requiredShip": null,
+    "dungeonFloors": 3
+  },
+  {
+    "id": "hiveTartarus",
+    "name": "Tartarus Hive",
+    "type": "hiveWorld",
+    "description": "Billions of souls toil in the endless spires. STC fragments await in the underhive.",
+    "dangerLevel": 2,
+    "distance": 2,
+    "energyCost": 150,
+    "rewards": { "tech": 200, "alloys": 50 },
+    "requiredShip": "frigate",
+    "dungeonFloors": 5
+  },
+  {
+    "id": "carnagedd",
+    "name": "Carnage IV",
+    "type": "deathWorld",
+    "description": "Every living thing here hunts. Tyranid bioforms lurk beneath the canopy.",
+    "dangerLevel": 3,
+    "distance": 3,
+    "energyCost": 300,
+    "rewards": { "relics": 2, "tech": 100 },
+    "requiredShip": "cruiser",
+    "dungeonFloors": 7
+  },
+  {
+    "id": "warpRift",
+    "name": "The Screaming Rift",
+    "type": "chaosSpace",
+    "description": "Reality tears apart. Daemons whisper from the warp. Only the faithful survive.",
+    "dangerLevel": 4,
+    "distance": 4,
+    "energyCost": 500,
+    "rewards": { "relics": 5, "alloys": 200 },
+    "requiredShip": "battleBarge",
+    "dungeonFloors": 10
+  },
+  {
+    "id": "forgeMars",
+    "name": "Mars Secundus",
+    "type": "forgeWorld",
+    "description": "A lesser forge world. The Machine God's blessings flow through ancient forges.",
+    "dangerLevel": 3,
+    "distance": 3,
+    "energyCost": 400,
+    "rewards": { "alloys": 300, "tech": 300 },
+    "requiredShip": "cruiser",
+    "dungeonFloors": 8
+  }
+]

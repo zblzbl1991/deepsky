@@ -1,0 +1,23 @@
+[
+  {
+    "id": "frigate",
+    "name": "Imperial Frigate",
+    "description": "A swift patrol vessel. Enough for short-range warp jumps.",
+    "cost": { "minerals": 500, "alloys": 100 },
+    "range": 2
+  },
+  {
+    "id": "cruiser",
+    "name": "Lunar Cruiser",
+    "description": "A warship of the line. Carries enough firepower for dangerous sectors.",
+    "cost": { "minerals": 2000, "alloys": 500, "energy": 200 },
+    "range": 3
+  },
+  {
+    "id": "battleBarge",
+    "name": "Strike Cruiser",
+    "description": "A Space Marine battle barge. The Emperor's fury made manifest.",
+    "cost": { "minerals": 5000, "alloys": 1500, "tech": 500, "relics": 3 },
+    "range": 5
+  }
+]
