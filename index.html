@@ -9,12 +9,72 @@
 <body>
   <div id="app">
     <div id="view-idle" class="view active">
-      <p>Imperial Outpost — Loading...</p>
+      <header id="header">
+        <h1>IMPERIAL OUTPOST</h1>
+        <nav id="nav">
+          <button class="nav-btn active" data-view="idle">Base</button>
+          <button class="nav-btn" data-view="starmap">Star Map</button>
+          <button class="nav-btn" data-view="dungeon">Expedition</button>
+        </nav>
+      </header>
+
+      <section id="resource-panel">
+        <div class="resource-row" data-resource="minerals">
+          <span class="resource-icon">&#9935;</span>
+          <span class="resource-name">Minerals</span>
+          <span class="resource-value" id="res-minerals">0</span>
+          <span class="resource-rate" id="rate-minerals">+0/s</span>
+        </div>
+        <div class="resource-row" data-resource="energy">
+          <span class="resource-icon">&#9889;</span>
+          <span class="resource-name">Energy</span>
+          <span class="resource-value" id="res-energy">0</span>
+          <span class="resource-rate" id="rate-energy">+0/s</span>
+        </div>
+        <div class="resource-row" data-resource="tech">
+          <span class="resource-icon">&#128220;</span>
+          <span class="resource-name">Tech</span>
+          <span class="resource-value" id="res-tech">0</span>
+          <span class="resource-rate" id="rate-tech">+0/s</span>
+        </div>
+        <div class="resource-row" data-resource="alloys">
+          <span class="resource-icon">&#9881;</span>
+          <span class="resource-name">Alloys</span>
+          <span class="resource-value" id="res-alloys">0</span>
+          <span class="resource-rate" id="rate-alloys">+0/s</span>
+        </div>
+        <div class="resource-row" data-resource="relics">
+          <span class="resource-icon">&#128065;</span>
+          <span class="resource-name">Relics</span>
+          <span class="resource-value" id="res-relics">0</span>
+        </div>
+      </section>
+
+      <section id="building-panel">
+        <h2>FACILITIES</h2>
+        <div id="building-list"></div>
+      </section>
     </div>
     <div id="view-starmap" class="view">
+      <header id="header-starmap">
+        <h1>IMPERIAL OUTPOST</h1>
+        <nav id="nav-starmap">
+          <button class="nav-btn" data-view="idle">Base</button>
+          <button class="nav-btn active" data-view="starmap">Star Map</button>
+          <button class="nav-btn" data-view="dungeon">Expedition</button>
+        </nav>
+      </header>
       <p>Star Map — Coming Soon</p>
     </div>
     <div id="view-dungeon" class="view">
+      <header id="header-dungeon">
+        <h1>IMPERIAL OUTPOST</h1>
+        <nav id="nav-dungeon">
+          <button class="nav-btn" data-view="idle">Base</button>
+          <button class="nav-btn" data-view="starmap">Star Map</button>
+          <button class="nav-btn active" data-view="dungeon">Expedition</button>
+        </nav>
+      </header>
       <p>Dungeon — Coming Soon</p>
     </div>
   </div>

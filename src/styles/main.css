@@ -24,3 +24,92 @@ body {
 .view.active {
   display: block;
 }
+
+/* Header */
+#header h1 {
+  font-size: 1.5rem;
+  color: #c9a84c;
+  letter-spacing: 4px;
+  margin-bottom: 10px;
+}
+
+#nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.nav-btn {
+  background: #1a1a2e;
+  color: #666;
+  border: 1px solid #333;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.nav-btn.active {
+  color: #c9a84c;
+  border-color: #c9a84c;
+}
+
+.nav-btn:hover {
+  border-color: #c9a84c;
+}
+
+/* Resources */
+#resource-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.resource-row {
+  background: #12121f;
+  border: 1px solid #1e1e3a;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 180px;
+}
+
+.resource-icon { font-size: 1.2rem; }
+.resource-name { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+.resource-value { color: #e0d0a0; font-weight: bold; font-size: 1.1rem; min-width: 60px; text-align: right; }
+.resource-rate { color: #4a8; font-size: 0.75rem; }
+
+/* Buildings */
+#building-panel h2 { color: #888; font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 10px; }
+
+.building-card {
+  background: #12121f;
+  border: 1px solid #1e1e3a;
+  padding: 14px;
+  margin-bottom: 8px;
+}
+
+.building-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.building-name { color: #c9a84c; font-size: 1rem; letter-spacing: 1px; }
+.building-level { color: #666; font-size: 0.8rem; }
+.building-desc { color: #555; font-size: 0.75rem; margin-bottom: 8px; font-style: italic; }
+.building-cost { color: #888; font-size: 0.8rem; margin-bottom: 8px; }
+.building-production { color: #4a8; font-size: 0.8rem; margin-bottom: 8px; }
+
+.upgrade-btn {
+  background: #1a1a2e;
+  color: #c9a84c;
+  border: 1px solid #c9a84c;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.upgrade-btn:hover:not(:disabled) { background: #2a2a4e; }
+.upgrade-btn:disabled { color: #444; border-color: #333; cursor: not-allowed; }
+.building-card.locked { opacity: 0.5; }
