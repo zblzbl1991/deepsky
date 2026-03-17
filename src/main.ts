@@ -74,7 +74,10 @@ async function init() {
       const { calculateOfflineProgress } = await import('./game/gameLoop.js');
       const capped = calculateOfflineProgress(state, elapsed);
       if (capped > 0) {
-        console.log(`Welcome back, Commander. ${Math.floor(capped / 60)} minutes of production recovered.`);
+        const minutes = Math.floor(capped / 60);
+        const msg = `Welcome back, Commander. ${minutes} minute${minutes !== 1 ? 's' : ''} of production recovered.`;
+        console.log(msg);
+        alert(msg);
       }
       renderIdleView(state);
     }
@@ -178,7 +181,14 @@ async function init() {
   gameLoop.start();
 
   setInterval(() => renderIdleView(state), 1000);
-  setInterval(() => saveManager.save(state), 30000);
+  setInterval(() => {
+    saveManager.save(state);
+    const indicator = document.getElementById('save-indicator');
+    if (indicator) {
+      indicator.classList.add('flash');
+      setTimeout(() => indicator.classList.remove('flash'), 1000);
+    }
+  }, 30000);
   window.addEventListener('beforeunload', () => saveManager.save(state));
 }
 
