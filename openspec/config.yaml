@@ -1,0 +1,21 @@
+schema: spec-driven
+
+context: |
+  Tech stack: TypeScript 5, Vite, Vitest, HTML/CSS, Canvas 2D API, IndexedDB (idb-keyval)
+  No frameworks, no game engine. Pure TypeScript with zero dependencies beyond build/test tooling.
+  Architecture: Layered — pure TS game logic (no DOM), HTML UI overlay, Canvas 2D for roguelike maps.
+  We use conventional commits (feat/chore/docs).
+  Domain: W40K (Warhammer 40K) themed idle/roguelike browser game called "Deep Sky".
+  View system: Simple show/hide with .active CSS class. No router.
+  State: Zustand-like pattern with GameState class. All game logic is pure TS, testable without DOM.
+  Rendering: HTML/CSS for UI panels, Canvas 2D only for roguelike tile maps.
+  Persistence: IndexedDB via idb-keyval. Auto-save every 30s + on view switch + on page close.
+
+rules:
+  proposal:
+    - Keep proposals focused on one coherent feature or change
+    - Always include W40K theme context when relevant
+  tasks:
+    - Follow TDD: write tests first, verify fail, implement, verify pass
+    - Keep each task to a single concern
+    - Commit after each task
