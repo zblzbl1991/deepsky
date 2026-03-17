@@ -1,0 +1,39 @@
+[
+  {
+    "id": "mine",
+    "name": "Mining Shaft",
+    "description": "Delve into the crust. For the Emperor needs these resources.",
+    "baseCost": { "minerals": 50 },
+    "costMultiplier": 1.8,
+    "produces": { "minerals": 2 },
+    "maxLevel": 10
+  },
+  {
+    "id": "powerPlant",
+    "name": "Plasma Generator",
+    "description": "Harness the power of the stars to fuel our endeavors.",
+    "baseCost": { "minerals": 80 },
+    "costMultiplier": 1.8,
+    "produces": { "energy": 1.5 },
+    "maxLevel": 10
+  },
+  {
+    "id": "researchLab",
+    "name": "Divination Chamber",
+    "description": "Tech-Priests parse STC fragments to unlock ancient knowledge.",
+    "baseCost": { "minerals": 150, "energy": 50 },
+    "costMultiplier": 2.0,
+    "produces": { "tech": 0.5 },
+    "maxLevel": 10
+  },
+  {
+    "id": "refinery",
+    "name": "Alloy Forge",
+    "description": "Transmute base minerals into refined alloys worthy of the Imperium.",
+    "baseCost": { "minerals": 300, "energy": 100 },
+    "costMultiplier": 2.2,
+    "produces": { "alloys": 0.3 },
+    "consumes": { "minerals": 5, "energy": 2 },
+    "maxLevel": 10
+  }
+]
