@@ -12,7 +12,7 @@ export interface BuildingDef {
   maxLevel: number;
 }
 
-const buildings: BuildingDef[] = buildingsData;
+const buildings: BuildingDef[] = buildingsData as BuildingDef[];
 
 export function getBuildings(): BuildingDef[] {
   return buildings;

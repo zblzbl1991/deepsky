@@ -12,14 +12,16 @@ export interface EnemyDef {
 
 import enemiesData from '../data/enemies.json' assert { type: 'json' };
 
+const enemies: EnemyDef[] = enemiesData as EnemyDef[];
+
 export function getEnemies(): EnemyDef[] {
-  return enemiesData;
+  return enemies;
 }
 
 export function getEnemiesForFloor(floor: number): EnemyDef[] {
-  return enemiesData.filter((e: EnemyDef) => e.minFloor <= floor && !e.isBoss);
+  return enemies.filter((e) => e.minFloor <= floor && !e.isBoss);
 }
 
 export function getBossForFloor(floor: number): EnemyDef | undefined {
-  return enemiesData.find((e: EnemyDef) => e.isBoss && e.minFloor <= floor);
+  return enemies.find((e) => e.isBoss && e.minFloor <= floor);
 }

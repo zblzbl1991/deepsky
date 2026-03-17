@@ -9,8 +9,10 @@ export interface ShipDef {
   range: number;
 }
 
+const ships: ShipDef[] = shipsData as unknown as ShipDef[];
+
 export function getShips(): ShipDef[] {
-  return shipsData;
+  return ships;
 }
 
 export function canBuildShip(state: GameState, shipId: string): boolean {

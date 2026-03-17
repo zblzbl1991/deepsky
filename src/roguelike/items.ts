@@ -11,10 +11,12 @@ export interface ItemDef {
 
 import itemsData from '../data/items.json' assert { type: 'json' };
 
+const items: ItemDef[] = itemsData as ItemDef[];
+
 export function getItems(): ItemDef[] {
-  return itemsData;
+  return items;
 }
 
 export function getItemById(id: string): ItemDef | undefined {
-  return itemsData.find((i: ItemDef) => i.id === id);
+  return items.find((i) => i.id === id);
 }

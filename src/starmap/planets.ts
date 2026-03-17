@@ -14,12 +14,14 @@ export interface PlanetDef {
   dungeonFloors: number;
 }
 
+const planets: PlanetDef[] = planetsData as unknown as PlanetDef[];
+
 export function getPlanets(): PlanetDef[] {
-  return planetsData;
+  return planets;
 }
 
 export function getPlanetDef(id: string): PlanetDef | undefined {
-  return planetsData.find((p: PlanetDef) => p.id === id);
+  return planets.find((p) => p.id === id);
 }
 
 export function isPlanetUnlocked(state: GameState, planetId: string): boolean {
