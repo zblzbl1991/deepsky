@@ -47,4 +47,79 @@ describe('Combat', () => {
     executeCombatRound(combat, 'attack');
     expect(isCombatOver(combat)).toBe(true);
   });
+
+  it('player attack adds message to combat log', () => {
+    const combat = createCombatState(100, 10, 5, dummyEnemy);
+    executeCombatRound(combat, 'attack');
+    expect(combat.log.length).toBeGreaterThan(0);
+    expect(combat.log[0]).toContain('造成');
+  });
+
+  it('enemy counterattack adds message to combat log', () => {
+    const combat = createCombatState(100, 10, 5, dummyEnemy);
+    executeCombatRound(combat, 'attack');
+    expect(combat.log.some(l => l.includes('反击'))).toBe(true);
+  });
+
+  it('flee success adds message to combat log', () => {
+    // Mock Math.random to ensure flee succeeds
+    const originalRandom = Math.random;
+    Math.random = () => 0.3; // Always < 0.5
+    const combat = createCombatState(100, 10, 5, dummyEnemy);
+    executeCombatRound(combat, 'flee');
+    Math.random = originalRandom;
+    expect(combat.log.some(l => l.includes('脱离'))).toBe(true);
+  });
+
+  it('flee failure adds message to combat log', () => {
+    // Mock Math.random to ensure flee fails
+    const originalRandom = Math.random;
+    Math.random = () => 0.7; // Always >= 0.5
+    const combat = createCombatState(100, 10, 5, dummyEnemy);
+    executeCombatRound(combat, 'flee');
+    Math.random = originalRandom;
+    expect(combat.log.some(l => l.includes('失败'))).toBe(true);
+  });
+
+  it('getCombatResult returns fled when player escaped', () => {
+    const originalRandom = Math.random;
+    Math.random = () => 0.3;
+    const combat = createCombatState(100, 10, 5, dummyEnemy);
+    executeCombatRound(combat, 'flee');
+    Math.random = originalRandom;
+    const result = getCombatResult(combat);
+    expect(result.winner).toBe('fled');
+    expect(result.expGained).toBe(0);
+  });
+
+  it('getCombatResult returns player when enemy defeated', () => {
+    const combat = createCombatState(100, 999, 0, dummyEnemy);
+    executeCombatRound(combat, 'attack');
+    const result = getCombatResult(combat);
+    expect(result.winner).toBe('player');
+    expect(result.expGained).toBe(dummyEnemy.exp);
+  });
+
+  it('getCombatResult returns enemy when player defeated', () => {
+    const combat = createCombatState(1, 0, 0, dummyEnemy);
+    executeCombatRound(combat, 'attack');
+    const result = getCombatResult(combat);
+    expect(result.winner).toBe('enemy');
+    expect(result.expGained).toBe(0);
+  });
+
+  it('slain enemy message is added to combat log', () => {
+    const combat = createCombatState(100, 999, 0, dummyEnemy);
+    executeCombatRound(combat, 'attack');
+    expect(combat.log.some(l => l.includes('击杀'))).toBe(true);
+  });
+
+  it('fled combat state is marked correctly', () => {
+    const originalRandom = Math.random;
+    Math.random = () => 0.3;
+    const combat = createCombatState(100, 10, 5, dummyEnemy);
+    executeCombatRound(combat, 'flee');
+    Math.random = originalRandom;
+    expect(combat.fled).toBe(true);
+  });
 });
