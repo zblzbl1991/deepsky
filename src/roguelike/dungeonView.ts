@@ -5,6 +5,7 @@ import type { EnemyDef } from './entities.js';
 import { createCombatState, executeCombatRound, isCombatOver, getCombatResult } from './combat.js';
 import { createFogMap, revealAround, fadeVisibility } from './fogOfWar.js';
 import type { FogState } from './fogOfWar.js';
+import type { SkillBuffs } from './skills.js';
 
 export interface DungeonRun {
   dungeon: Dungeon;
@@ -25,6 +26,10 @@ export interface DungeonRun {
   activeItems: { id: string; x: number; y: number }[];
   gameOver: boolean;
   victory: boolean;
+  playerMp: number;
+  playerMaxMp: number;
+  skillCooldowns: Record<string, number>;
+  skillBuffs: SkillBuffs;
 }
 
 export function startDungeonRun(state: GameState, _planetId: string, maxFloors: number): DungeonRun {
@@ -48,6 +53,10 @@ export function startDungeonRun(state: GameState, _planetId: string, maxFloors: 
     activeItems: [],
     gameOver: false,
     victory: false,
+    playerMp: 50,
+    playerMaxMp: 50,
+    skillCooldowns: {},
+    skillBuffs: {},
   };
 }
 
@@ -88,25 +97,27 @@ export function movePlayer(run: DungeonRun, dx: number, dy: number): void {
   const itemIdx = run.activeItems.findIndex(i => i.x === nx && i.y === ny);
   if (itemIdx >= 0) {
     run.loot.push(run.activeItems[itemIdx].id);
-    run.combatLog.push(`Picked up: ${run.activeItems[itemIdx].id}`);
+    run.combatLog.push(`拾取: ${run.activeItems[itemIdx].id}`);
     run.activeItems.splice(itemIdx, 1);
   }
 
   if (run.dungeon.tiles[ny][nx] === 2) {
     if (run.currentFloor < run.maxFloors) {
       enterFloor(run, run.currentFloor + 1);
-      run.combatLog.push(`Descending to floor ${run.currentFloor}...`);
+      run.combatLog.push(`下降到第 ${run.currentFloor} 层...`);
     } else {
       run.gameOver = true;
       run.victory = true;
-      run.combatLog.push('Expedition complete! For the Emperor!');
+      run.combatLog.push('远征完成！帝皇庇佑！');
     }
   }
 }
 
 function startCombat(run: DungeonRun, enemy: { def: EnemyDef; x: number; y: number; hp: number; maxHp: number; isBoss?: boolean }): void {
   run.inCombat = true;
-  run.combatState = createCombatState(run.playerHp, run.playerAttack, run.playerDefense, enemy.def);
+  run.combatState = createCombatState(run.playerHp, run.playerMp, run.playerAttack, run.playerDefense, enemy.def);
+  run.skillCooldowns = {};
+  run.skillBuffs = {};
   run.combatLog = [];
 }
 
@@ -134,12 +145,12 @@ function resolveCombat(run: DungeonRun): void {
     const enemy = run.activeEnemies.find(e => e.def.id === run.combatState!.enemy.id && e.hp > 0);
     if (enemy) enemy.hp = 0;
     run.exp += result.expGained;
-    run.combatLog.push(`Gained ${result.expGained} EXP!`);
+    run.combatLog.push(`获得 ${result.expGained} 经验！`);
   }
   if (result.winner === 'enemy' || run.playerHp <= 0) {
     run.gameOver = true;
     run.victory = false;
-    run.combatLog.push('You have fallen. The Emperor protects.');
+    run.combatLog.push('你已经倒下。帝皇庇佑。');
   }
   run.inCombat = false;
   run.combatState = null;
