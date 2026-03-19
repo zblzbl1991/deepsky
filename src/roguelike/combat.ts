@@ -63,7 +63,7 @@ export function executeCombatRound(state: CombatState, action: CombatAction): vo
   if (state.skillBuffs.nextAttackBoost && (state.skillBuffs.nextAttackBoostHits ?? 0) > 0) {
     multiplier += state.skillBuffs.nextAttackBoost / 100;
     state.skillBuffs.nextAttackBoostHits!--;
-    if (state.skillBuffs.nextAttackBoostHits <= 0) {
+    if ((state.skillBuffs.nextAttackBoostHits ?? 0) <= 0) {
       state.skillBuffs.nextAttackBoost = undefined;
       state.skillBuffs.nextAttackBoostHits = undefined;
     }

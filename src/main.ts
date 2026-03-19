@@ -2,62 +2,157 @@ import { createGameState } from './game/gameState.js';
 import { GameLoop } from './game/gameLoop.js';
 import { SaveManager } from './game/saveManager.js';
 import { createUIManager } from './ui/uiManager.js';
-import { renderIdleView } from './idle/idleView.js';
+import { renderIdleView, renderResources } from './idle/idleView.js';
 import { renderStarMapView } from './starmap/starMapView.js';
 import { getPlanetDef } from './starmap/planets.js';
-import { startDungeonRun, enterFloor, movePlayer, playerAttack, playerFlee, type DungeonRun } from './roguelike/dungeonView.js';
+import { startDungeonRun, enterFloor, movePlayer, playerAttack, playerFlee, useSkillById, type DungeonRun } from './roguelike/dungeonView.js';
 import { CanvasRenderer } from './render/canvasRenderer.js';
+import { getSkillsForClass } from './roguelike/skills.js';
+import { endTurn, executeEnemyTurn } from './roguelike/combat.js';
+import type { GameState } from './game/gameState.js';
 
 let dungeonRun: DungeonRun | null = null;
 let dungeonRenderer: CanvasRenderer | null = null;
 let dungeonAnimFrame: number | null = null;
+let gameState: GameState | null = null;
+
+function toRoman(n: number): string {
+  const romanMap: [number, string][] = [
+    [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I'],
+  ];
+  let result = '';
+  for (const [value, numeral] of romanMap) {
+    while (n >= value) {
+      result += numeral;
+      n -= value;
+    }
+  }
+  return result || 'I';
+}
+
+function renderBattleUI(run: DungeonRun): void {
+  const cs = run.combatState!;
+  const playerClass = gameState!.player.class;
+  const skills = getSkillsForClass(playerClass);
+
+  // Enemy info
+  document.getElementById('battle-floor')!.textContent = `第 ${toRoman(run.currentFloor)} 层`;
+  document.getElementById('enemy-name')!.textContent = cs.enemy.name;
+  const enemyHpPct = (cs.enemyHp / cs.enemyMaxHp) * 100;
+  document.getElementById('enemy-hp-bar')!.style.width = `${enemyHpPct}%`;
+  document.getElementById('enemy-hp-text')!.textContent = `${cs.enemyHp}/${cs.enemyMaxHp}`;
+
+  // Player info
+  document.getElementById('player-battle-name')!.textContent = playerClass === 'spaceMarine' ? '星际战士'
+    : playerClass === 'inquisitor' ? '审讯官'
+    : playerClass === 'techPriest' ? '机仆祭司'
+    : '政委';
+  const playerHpPct = (cs.playerHp / cs.playerMaxHp) * 100;
+  document.getElementById('player-hp-bar')!.style.width = `${playerHpPct}%`;
+  document.getElementById('player-hp-text')!.textContent = `${cs.playerHp}/${cs.playerMaxHp}`;
+  const mpPct = (cs.playerMp / cs.playerMaxMp) * 100;
+  document.getElementById('player-mp-bar')!.style.width = `${mpPct}%`;
+  document.getElementById('player-mp-text')!.textContent = `${cs.playerMp}/${cs.playerMaxMp}`;
+
+  // Status panel
+  document.getElementById('status-hp-bar')!.style.width = `${playerHpPct}%`;
+  document.getElementById('status-hp-text')!.textContent = `${cs.playerHp}/${cs.playerMaxHp}`;
+  document.getElementById('status-mp-bar')!.style.width = `${mpPct}%`;
+  document.getElementById('status-mp-text')!.textContent = `${cs.playerMp}/${cs.playerMaxMp}`;
+
+  // HP bar color
+  const hpBarClass = playerHpPct > 50 ? '' : playerHpPct > 25 ? 'medium' : 'low';
+  ['player-hp-bar', 'status-hp-bar'].forEach(id => {
+    const el = document.getElementById(id)!;
+    el.className = `stat-bar-fill hp ${hpBarClass}`;
+  });
+  const enemyHpBarClass = enemyHpPct > 50 ? '' : enemyHpPct > 25 ? 'medium' : 'low';
+  document.getElementById('enemy-hp-bar')!.className = `stat-bar-fill hp ${enemyHpBarClass}`;
+
+  // Skill buttons
+  const skillBtnIds = ['btn-skill1', 'btn-skill2', 'btn-skill3'];
+  const cdIds = ['cd-skill1', 'cd-skill2', 'cd-skill3'];
+  skills.forEach((skill, i) => {
+    const btn = document.getElementById(skillBtnIds[i]);
+    const cdEl = document.getElementById(cdIds[i]);
+    if (!btn) return;
+
+    (btn as HTMLButtonElement).textContent = `${skill.icon} ${skill.name}`;
+    const mpOk = run.playerMp >= skill.mpCost;
+    const onCd = (run.skillCooldowns[skill.id] || 0) > 0;
+    (btn as HTMLButtonElement).disabled = !mpOk || onCd;
+
+    if (cdEl) {
+      if (onCd) {
+        cdEl.textContent = `${run.skillCooldowns[skill.id]}`;
+        cdEl.className = 'cooldown-item on-cooldown';
+      } else {
+        cdEl.textContent = '就绪';
+        cdEl.className = 'cooldown-item ready';
+      }
+    }
+  });
+
+  // Combat log
+  document.getElementById('battle-log')!.innerHTML = cs.log.map(l => {
+    let cls = 'log-entry';
+    if (l.includes('伤害')) cls += ' damage';
+    else if (l.includes('恢复') || l.includes('吸取')) cls += ' heal';
+    else if (l.includes('选择') || l.includes('免疫') || l.includes('抵挡')) cls += ' system';
+    else cls += ' player-action';
+    return `<div class="${cls}">${l}</div>`;
+  }).join('');
+
+  const logEl = document.getElementById('battle-log')!;
+  logEl.scrollTop = logEl.scrollHeight;
+}
 
 function renderDungeonView(): void {
   if (!dungeonRun) return;
 
-  document.getElementById('dungeon-floor')!.textContent = `Floor ${dungeonRun.currentFloor}/${dungeonRun.maxFloors}`;
-  document.getElementById('dungeon-hp')!.textContent = `HP: ${dungeonRun.playerHp}/${dungeonRun.playerMaxHp}`;
-  document.getElementById('dungeon-atk')!.textContent = `ATK: ${dungeonRun.playerAttack}`;
-  document.getElementById('dungeon-def')!.textContent = `DEF: ${dungeonRun.playerDefense}`;
-  document.getElementById('dungeon-exp')!.textContent = `EXP: ${dungeonRun.exp}`;
+  // HUD
+  document.getElementById('dungeon-floor')!.textContent = `第 ${toRoman(dungeonRun.currentFloor)} 层 / 第 ${toRoman(dungeonRun.maxFloors)} 层`;
+  document.getElementById('dungeon-hp')!.textContent = `生命: ${dungeonRun.playerHp} / ${dungeonRun.playerMaxHp}`;
+  document.getElementById('dungeon-atk')!.textContent = `攻击: ${dungeonRun.playerAttack}`;
+  document.getElementById('dungeon-def')!.textContent = `防御: ${dungeonRun.playerDefense}`;
+  document.getElementById('dungeon-exp')!.textContent = `经验: ${dungeonRun.exp}`;
 
-  const combatPanel = document.getElementById('combat-panel')!;
+  const battleScreen = document.getElementById('battle-screen')!;
+  const dungeonExplore = document.getElementById('dungeon-explore')!;
+
   if (dungeonRun.inCombat && dungeonRun.combatState) {
-    combatPanel.style.display = 'block';
-    document.getElementById('combat-info')!.textContent =
-      `${dungeonRun.combatState.enemy.name} — HP: ${dungeonRun.combatState.enemyHp}/${dungeonRun.combatState.enemyMaxHp}`;
-    document.getElementById('combat-log')!.innerHTML =
-      dungeonRun.combatLog.map(l => `<p>${l}</p>`).join('');
+    battleScreen.style.display = 'block';
+    dungeonExplore.classList.add('hidden');
+    renderBattleUI(dungeonRun);
   } else {
-    combatPanel.style.display = 'none';
-  }
+    battleScreen.style.display = 'none';
+    dungeonExplore.classList.remove('hidden');
 
-  document.getElementById('dungeon-log')!.innerHTML =
-    dungeonRun.combatLog.slice(-5).map(l => `<p>${l}</p>`).join('');
+    document.getElementById('dungeon-log')!.innerHTML =
+      dungeonRun.combatLog.slice(-5).map(l => `<p>${l}</p>`).join('');
 
-  if (dungeonRenderer) {
-    dungeonRenderer.renderDungeon(
-      dungeonRun.dungeon,
-      dungeonRun.fog,
-      dungeonRun.playerPos,
-      dungeonRun.activeEnemies,
-      dungeonRun.activeItems,
-    );
+    if (dungeonRenderer) {
+      dungeonRenderer.renderDungeon(
+        dungeonRun.dungeon, dungeonRun.fog, dungeonRun.playerPos,
+        dungeonRun.activeEnemies, dungeonRun.activeItems,
+      );
+    }
   }
 
   if (dungeonRun.gameOver) {
     const resultEl = document.getElementById('dungeon-result')!;
     resultEl.style.display = 'block';
     if (dungeonRun.victory) {
-      resultEl.innerHTML = `<h2>EXPEDITION COMPLETE</h2><p>All floors cleared! For the Emperor!</p><p>EXP gained: ${dungeonRun.exp} | Loot: ${dungeonRun.loot.join(', ') || 'none'}</p>`;
+      resultEl.innerHTML = `<h2>远征完成</h2><p>所有楼层已清理！帝皇庇佑！</p><p>获得经验: ${dungeonRun.exp} | 战利品: ${dungeonRun.loot.join(', ') || '无'}</p>`;
     } else {
-      resultEl.innerHTML = `<h2>FALLEN IN BATTLE</h2><p>The Emperor protects... in the next life.</p><p>EXP gained: ${dungeonRun.exp}</p>`;
+      resultEl.innerHTML = `<h2>战死沙场</h2><p>帝皇庇佑……来世再见。</p><p>获得经验: ${dungeonRun.exp}</p>`;
     }
   }
 }
 
 async function init() {
   const state = createGameState();
+  gameState = state;
   const ui = createUIManager();
   const saveManager = new SaveManager();
   const gameLoop = new GameLoop(state);
@@ -109,6 +204,16 @@ async function init() {
       ui.showView(view);
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+
+      // Update header title
+      const titles: Record<string, string> = {
+        idle: '帝国哨站',
+        starmap: '星图',
+        dungeon: '远征',
+      };
+      const titleEl = document.getElementById('view-title');
+      if (titleEl && titles[view]) titleEl.textContent = titles[view];
+
       if (view === 'idle') renderIdleView(state);
       if (view === 'starmap') {
         renderStarMapView(state, (planetId) => {
@@ -119,17 +224,17 @@ async function init() {
           dungeonRun = startDungeonRun(state, planetId, planet.dungeonFloors);
           enterFloor(dungeonRun, 1);
 
+          document.getElementById('dungeon-result')!.style.display = 'none';
+          document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+          document.querySelector('[data-view="dungeon"]')!.classList.add('active');
+          ui.showView('dungeon');
+
           const canvas = document.getElementById('dungeon-canvas') as HTMLCanvasElement;
           const container = document.getElementById('dungeon-container')!;
           const w = Math.min(container.clientWidth, 640);
           canvas.width = w;
           canvas.height = Math.floor(w * 0.75);
           dungeonRenderer = new CanvasRenderer('dungeon-canvas');
-
-          document.getElementById('dungeon-result')!.style.display = 'none';
-          document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-          document.querySelector('[data-view="dungeon"]')!.classList.add('active');
-          ui.showView('dungeon');
 
           if (dungeonAnimFrame) cancelAnimationFrame(dungeonAnimFrame);
           const animate = () => {
@@ -171,16 +276,34 @@ async function init() {
 
   // Combat button controls
   document.getElementById('btn-attack')!.addEventListener('click', () => {
-    if (dungeonRun) playerAttack(dungeonRun);
+    if (!dungeonRun || !dungeonRun.inCombat || !dungeonRun.combatState) return;
+    playerAttack(dungeonRun);
+    dungeonRun.playerMp = dungeonRun.combatState.playerMp;
+    dungeonRun.skillCooldowns = dungeonRun.combatState.skillCooldowns;
+    dungeonRun.skillBuffs = dungeonRun.combatState.skillBuffs;
   });
+
   document.getElementById('btn-flee')!.addEventListener('click', () => {
-    if (dungeonRun) playerFlee(dungeonRun);
+    if (!dungeonRun || !dungeonRun.inCombat) return;
+    playerFlee(dungeonRun);
+  });
+
+  // Skill button controls
+  ['btn-skill1', 'btn-skill2', 'btn-skill3'].forEach((btnId, i) => {
+    document.getElementById(btnId)!.addEventListener('click', () => {
+      if (!dungeonRun) return;
+      const playerClass = state.player.class;
+      const skills = getSkillsForClass(playerClass);
+      const skill = skills[i];
+      if (!skill) return;
+      useSkillById(dungeonRun, playerClass, skill.id);
+    });
   });
 
   renderIdleView(state);
   gameLoop.start();
 
-  setInterval(() => renderIdleView(state), 1000);
+  setInterval(() => renderResources(state), 1000);
   setInterval(() => {
     saveManager.save(state);
     const indicator = document.getElementById('save-indicator');

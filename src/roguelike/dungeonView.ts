@@ -2,9 +2,10 @@ import type { GameState } from '../game/gameState.js';
 import type { Dungeon } from './dungeonGen.js';
 import { generateDungeon } from './dungeonGen.js';
 import type { EnemyDef } from './entities.js';
-import { createCombatState, executeCombatRound, isCombatOver, getCombatResult } from './combat.js';
+import { createCombatState, executeCombatRound, isCombatOver, getCombatResult, useSkill, executeEnemyTurn, endTurn } from './combat.js';
 import { createFogMap, revealAround, fadeVisibility } from './fogOfWar.js';
 import type { FogState } from './fogOfWar.js';
+import { getSkillsForClass, getSkillDef } from './skills.js';
 import type { SkillBuffs } from './skills.js';
 
 export interface DungeonRun {
@@ -126,7 +127,13 @@ export function playerAttack(run: DungeonRun): void {
   executeCombatRound(run.combatState, 'attack');
   run.combatLog.push(...run.combatState.log);
   run.combatState.log = [];
-  if (isCombatOver(run.combatState)) resolveCombat(run);
+  if (isCombatOver(run.combatState)) {
+    resolveCombat(run);
+  } else {
+    endTurn(run.combatState);
+    run.playerMp = run.combatState.playerMp;
+    run.skillCooldowns = run.combatState.skillCooldowns;
+  }
 }
 
 export function playerFlee(run: DungeonRun): void {
@@ -134,7 +141,48 @@ export function playerFlee(run: DungeonRun): void {
   executeCombatRound(run.combatState, 'flee');
   run.combatLog.push(...run.combatState.log);
   run.combatState.log = [];
-  if (isCombatOver(run.combatState)) resolveCombat(run);
+  if (isCombatOver(run.combatState)) {
+    resolveCombat(run);
+  }
+}
+
+export function useSkillById(run: DungeonRun, classId: string, skillId: string): void {
+  if (!run.inCombat || !run.combatState) return;
+
+  const skill = getSkillDef(classId, skillId);
+  if (!skill) return;
+
+  const result = useSkill(run.combatState, skill);
+  run.combatLog.push(...run.combatState.log);
+  run.combatState.log = [];
+
+  if (!result.success) {
+    run.combatLog.push(result.message);
+    return;
+  }
+
+  // Sync MP and cooldowns to DungeonRun
+  run.playerMp = run.combatState.playerMp;
+  run.skillCooldowns = run.combatState.skillCooldowns;
+  run.skillBuffs = run.combatState.skillBuffs;
+
+  if (isCombatOver(run.combatState)) {
+    resolveCombat(run);
+  } else {
+    // Enemy turn
+    executeEnemyTurn(run.combatState);
+    run.combatLog.push(...run.combatState.log);
+    run.combatState.log = [];
+
+    if (isCombatOver(run.combatState)) {
+      resolveCombat(run);
+    } else {
+      // Turn end: MP regen, cooldown tick
+      endTurn(run.combatState);
+      run.playerMp = run.combatState.playerMp;
+      run.skillCooldowns = run.combatState.skillCooldowns;
+    }
+  }
 }
 
 function resolveCombat(run: DungeonRun): void {
