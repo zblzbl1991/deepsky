@@ -109,6 +109,7 @@ export function renderExpeditionPanel(exp: Expedition): void {
 export function showExpeditionResult(
   exp: Expedition,
   settlement: { expGained: number; loot: { itemId: string; name: string }[]; resourcesGained: Partial<Record<ResourceType, number>>; failedLoot: { itemId: string; name: string }[] },
+  isFirstVisit = false,
 ): void {
   document.getElementById('expedition-panel')!.style.display = 'none';
   document.getElementById('expedition-battle')!.style.display = 'none';
@@ -135,12 +136,15 @@ export function showExpeditionResult(
     failedHtml = `<p style="color:var(--red-40)">丢失战利品：${settlement.failedLoot.map(l => l.name).join('、')}</p>`;
   }
 
+  const firstVisitHtml = isFirstVisit ? '<p style="color:var(--gold,#c8a832);font-weight:bold;font-size:14px">★ 首次探索奖励！</p>' : '';
+
   resultEl.innerHTML = `
     <h2>${title}</h2>
     <p>${subtitle}</p>
+    ${firstVisitHtml}
     <p>获得经验：${settlement.expGained}</p>
     ${lootHtml}${resHtml}${failedHtml}
-    <p style="font-size:var(--text-xs);color:var(--text-dim);margin-top:var(--space-4)">返回星图选择新的目标星球。</p>
+    <p style="font-size:var(--text-xs);color:var(--text-dim);margin-top:var(--space-4)">点击返回星图，或等待 3 秒自动返回。</p>
   `;
 }
 

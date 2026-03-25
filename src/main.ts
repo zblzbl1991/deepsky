@@ -178,22 +178,66 @@ function advanceOneEvent(state: GameState): void {
   }
 }
 
+function returnToStarmap(state: GameState): void {
+  const ui = createUIManager();
+  ui.showView('starmap');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('[data-view="starmap"]')!.classList.add('active');
+  document.getElementById('view-title')!.textContent = '星图';
+  renderStarMapView(state, (planetId) => {
+    showExpeditionConfigModal(planetId, state, (pid, difficulty) => {
+      startExpedition(pid, difficulty);
+    });
+  });
+}
+
 function finishExpedition(state: GameState): void {
   const exp = state.activeExpedition;
   if (!exp) return;
 
   const settlement = settleExpedition(exp);
 
-  // Apply rewards to game state
-  state.player.exp += settlement.expGained;
+  // First-time planet reward
+  let isFirstVisit = false;
+  if (exp.status === 'success' && !state.exploredPlanets.includes(exp.planetId)) {
+    const planet = getPlanetDef(exp.planetId);
+    if (planet?.firstReward) {
+      isFirstVisit = true;
+      const fr = planet.firstReward;
+      for (const [type, amount] of Object.entries(fr.resources)) {
+        const resType = type as 'minerals' | 'energy' | 'tech' | 'alloys' | 'relics';
+        settlement.resourcesGained[resType] = (settlement.resourcesGained[resType] || 0) + amount;
+      }
+      settlement.loot.push({ itemId: fr.itemId, name: fr.itemName });
+      state.exploredPlanets.push(exp.planetId);
+    }
+  }
+
+  // Apply exp (with addExp for level-up)
+  state.addExp(settlement.expGained);
+
+  // Apply resources
   for (const [type, amount] of Object.entries(settlement.resourcesGained)) {
     if (amount && amount > 0) {
       state.addResource(type as 'minerals' | 'energy' | 'tech' | 'alloys' | 'relics', amount);
     }
   }
 
-  showExpeditionResult(exp, settlement);
+  // Apply equipment
+  for (const item of settlement.loot) {
+    state.player.equipment.push(item.itemId);
+  }
+
+  showExpeditionResult(exp, settlement, isFirstVisit);
   state.activeExpedition = undefined;
+
+  // Auto-return to starmap after 3 seconds
+  const autoReturnTimer = setTimeout(() => returnToStarmap(state), 3000);
+
+  document.getElementById('expedition-result')!.addEventListener('click', () => {
+    clearTimeout(autoReturnTimer);
+    returnToStarmap(state);
+  }, { once: true });
 }
 
 async function init() {
