@@ -8,6 +8,7 @@ import { getPlanetDef } from './starmap/planets.js';
 import { createExpedition, advanceExpedition, settleExpedition, type Expedition } from './expedition/expeditionEngine.js';
 import { renderExpeditionPanel, renderExpeditionConfig, showExpeditionResult } from './expedition/expeditionView.js';
 import { showBattlePanel, hideBattlePanel, playAutoCombat } from './expedition/expeditionBattle.js';
+import { getEnergyDiscount } from './tech/techEffects.js';
 
 let gameState: GameState | null = null;
 let expeditionTimer: ReturnType<typeof setInterval> | null = null;
@@ -86,9 +87,11 @@ function startExpedition(planetId: string, difficulty: 1 | 2 | 3): void {
   const state = gameState!;
   const planet = getPlanetDef(planetId);
   if (!planet) return;
-  if (state.resources.energy < planet.energyCost) return;
+  const discount = getEnergyDiscount(state.techUnlocked);
+  const actualCost = Math.round(planet.energyCost * (1 - discount));
+  if (state.resources.energy < actualCost) return;
 
-  state.spendResource('energy', planet.energyCost);
+  state.spendResource('energy', actualCost);
 
   const exp = createExpedition(planetId, difficulty, state.player.class, state.player.level, state.techUnlocked);
   state.activeExpedition = exp;

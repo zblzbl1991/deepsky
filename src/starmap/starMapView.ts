@@ -2,6 +2,7 @@ import type { GameState } from '../game/gameState.js';
 import { getPlanets, isPlanetUnlocked } from './planets.js';
 import { getShips, canBuildShip, buildShip } from './ships.js';
 import { formatNumber } from '../ui/components.js';
+import { getEnergyDiscount } from '../tech/techEffects.js';
 
 const RESOURCE_NAMES: Record<string, string> = {
   minerals: '矿藏',
@@ -61,7 +62,9 @@ function renderPlanets(state: GameState, onPlanetSelect: (planetId: string) => v
 
   for (const planet of planets) {
     const unlocked = isPlanetUnlocked(state, planet.id);
-    const canAffordEnergy = state.resources.energy >= planet.energyCost;
+    const discount = getEnergyDiscount(state.techUnlocked);
+    const actualCost = Math.round(planet.energyCost * (1 - discount));
+    const canAffordEnergy = state.resources.energy >= actualCost;
     const card = document.createElement('div');
     card.className = `planet-card${!unlocked ? ' locked' : ''}`;
     card.dataset.danger = String(planet.dangerLevel);
@@ -74,7 +77,7 @@ function renderPlanets(state: GameState, onPlanetSelect: (planetId: string) => v
       </div>
       <div class="planet-desc">${planet.description}</div>
       <div class="planet-info">
-        <span>能量: ${formatNumber(planet.energyCost)}</span>
+        <span>能量: ${discount > 0 ? `<s style="color:var(--text-dim)">${formatNumber(planet.energyCost)}</s> ${formatNumber(actualCost)}` : formatNumber(planet.energyCost)}</span>
         <span>深度: ${planet.dungeonFloors}</span>
         <span>${rewardStr}</span>
       </div>
