@@ -26,6 +26,11 @@ export function renderExpeditionConfig(state: GameState): void {
 }
 
 export function renderExpeditionPanel(exp: Expedition): void {
+  document.getElementById('expedition-config')!.style.display = 'none';
+  document.getElementById('expedition-panel')!.style.display = 'block';
+  document.getElementById('expedition-battle')!.style.display = 'none';
+  document.getElementById('expedition-result')!.style.display = 'none';
+
   const planet = getPlanetDef(exp.planetId);
   const planetName = planet?.name ?? exp.planetId;
   const diffLabels: Record<number, string> = { 1: '低', 2: '中', 3: '高' };
