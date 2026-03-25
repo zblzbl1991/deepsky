@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { GameLoop, calculateOfflineProgress } from '../../src/game/gameLoop.js';
 import { createGameState } from '../../src/game/gameState.js';
+import { unlockBuilding } from '../../src/idle/buildings.js';
 
 describe('GameLoop', () => {
   it('produces resources based on buildings', () => {
@@ -74,5 +75,29 @@ describe('calculateOfflineProgress', () => {
 
     const capped = calculateOfflineProgress(state, 86400); // 24 hours
     expect(capped).toBeLessThanOrEqual(28800);
+  });
+});
+
+describe('GameLoop tech production bonus', () => {
+  it('mine produces more with improvedMining tech', () => {
+    const state = createGameState();
+    state.addResource('minerals', 999);
+    unlockBuilding(state, 'mine');
+
+    const loop = new GameLoop(state);
+
+    // Tick without tech
+    loop.tick(1);
+    const base = state.resources.minerals;
+
+    // Reset to the same starting point (after unlock cost but before production)
+    state.resources.minerals -= 2; // remove the production from the first tick
+
+    // Now with tech
+    state.techUnlocked.push('improvedMining');
+    loop.tick(1);
+
+    // With +50% tech bonus, mine produces 3 minerals/sec instead of 2
+    expect(state.resources.minerals).toBeGreaterThan(base);
   });
 });

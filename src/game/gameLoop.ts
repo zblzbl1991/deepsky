@@ -1,5 +1,7 @@
 import type { GameState, ResourceType } from './gameState.js';
 import { getBuildings } from '../idle/buildings.js';
+import { getBuildingProductionBonus } from '../tech/techEffects.js';
+import { getMilestoneBonuses } from '../player/classes.js';
 
 const MAX_OFFLINE_SECONDS = 8 * 60 * 60; // 8 hours
 const TICK_MS = 1000;
@@ -42,7 +44,9 @@ export class GameLoop {
       }
 
       for (const [key, val] of Object.entries(building.produces)) {
-        this.state.resources[key as ResourceType] += (val ?? 0) * buildingState.level * deltaSeconds;
+        const techBonus = 1 + getBuildingProductionBonus(building.id, this.state.techUnlocked);
+        const milestoneBonus = getMilestoneBonuses(this.state.player.level).productionMultiplier;
+        this.state.resources[key as ResourceType] += (val ?? 0) * buildingState.level * techBonus * milestoneBonus * deltaSeconds;
       }
     }
 
