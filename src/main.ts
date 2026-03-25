@@ -90,7 +90,7 @@ function startExpedition(planetId: string, difficulty: 1 | 2 | 3): void {
 
   state.spendResource('energy', planet.energyCost);
 
-  const exp = createExpedition(planetId, difficulty, state.player.class, state.player.level);
+  const exp = createExpedition(planetId, difficulty, state.player.class, state.player.level, state.techUnlocked);
   state.activeExpedition = exp;
 
   // Show expedition panel

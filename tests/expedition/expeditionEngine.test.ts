@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createExpedition, advanceExpedition, settleExpedition } from '../../src/expedition/expeditionEngine.js';
+import { createExpedition, advanceExpedition, settleExpedition, getPlayerStats } from '../../src/expedition/expeditionEngine.js';
 
 describe('createExpedition', () => {
   it('创建远征状态', () => {
@@ -118,5 +118,40 @@ describe('settleExpedition', () => {
     expect(result.loot.length).toBeLessThan(exp.loot.length);
     expect(result.failedLoot.length).toBeGreaterThan(0);
     expect(result.loot.length + result.failedLoot.length).toBe(exp.loot.length);
+  });
+});
+
+describe('getPlayerStats', () => {
+  it('base stats at level 1 spaceMarine', () => {
+    const stats = getPlayerStats(1, 'spaceMarine', []);
+    expect(stats.maxHp).toBe(130);
+    expect(stats.maxMp).toBe(55);
+    expect(stats.attack).toBe(15);
+    expect(stats.defense).toBe(6);
+  });
+
+  it('level 5 has more stats than level 1', () => {
+    const s1 = getPlayerStats(1, 'spaceMarine', []);
+    const s5 = getPlayerStats(5, 'spaceMarine', []);
+    expect(s5.maxHp).toBeGreaterThan(s1.maxHp);
+    expect(s5.attack).toBeGreaterThan(s1.attack);
+  });
+
+  it('tech combat bonus adds flat stats', () => {
+    const without = getPlayerStats(1, 'spaceMarine', []);
+    const withTech = getPlayerStats(1, 'spaceMarine', ['xenoAnalysis', 'voidShielding']);
+    expect(withTech.attack).toBe(without.attack + 5);
+    expect(withTech.defense).toBe(without.defense + 5);
+  });
+
+  it('milestone HP bonus at level 10', () => {
+    const stats = getPlayerStats(10, 'spaceMarine', []);
+    expect(stats.maxHp).toBe(240);
+  });
+
+  it('unknown classId falls back to 0 bonuses', () => {
+    const stats = getPlayerStats(1, 'nonexistent', []);
+    expect(stats.maxHp).toBe(110);
+    expect(stats.attack).toBe(12);
   });
 });

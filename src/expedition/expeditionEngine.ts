@@ -2,7 +2,8 @@ import type { ExpeditionEvent, ExpeditionPlayer, CombatResult } from './expediti
 import { generateExpeditionEvents } from './expeditionEvent.js';
 import { simulateAutoCombat } from './autoCombat.js';
 import { getPlanetDef } from '../starmap/planets.js';
-import { getClassDef } from '../player/classes.js';
+import { getClassDef, getMilestoneBonuses } from '../player/classes.js';
+import { getTechCombatBonus } from '../tech/techEffects.js';
 import type { ResourceType } from '../game/gameState.js';
 
 export interface LootItem {
@@ -24,19 +25,40 @@ export interface Expedition {
   startTime: number;
 }
 
+export function getPlayerStats(
+  level: number,
+  classId: string,
+  techUnlocked: string[],
+): { maxHp: number; maxMp: number; attack: number; defense: number } {
+  const classDef = getClassDef(classId);
+
+  const maxHp = 100 + level * 10 + (classDef?.hpBonus ?? 0);
+  const maxMp = 50 + level * 5;
+  const attack = 10 + level * 2 + (classDef?.attackBonus ?? 0);
+  const defense = 3 + level + (classDef?.defenseBonus ?? 0);
+
+  const combatBonus = getTechCombatBonus(techUnlocked);
+  const milestone = getMilestoneBonuses(level);
+
+  return {
+    maxHp: maxHp + milestone.expeditionHpBonus,
+    maxMp,
+    attack: attack + combatBonus.attack,
+    defense: defense + combatBonus.defense,
+  };
+}
+
 export function createExpedition(
   planetId: string,
   difficulty: 1 | 2 | 3,
   classId: string,
   playerLevel: number,
+  techUnlocked: string[] = [],
 ): Expedition {
   const planet = getPlanetDef(planetId);
   if (!planet) throw new Error(`Planet not found: ${planetId}`);
 
-  const classDef = getClassDef(classId);
-  const baseHp = 100 + playerLevel * 10 + (classDef?.hpBonus ?? 0);
-  const baseAttack = 10 + playerLevel * 2 + (classDef?.attackBonus ?? 0);
-  const baseDefense = 3 + playerLevel + (classDef?.defenseBonus ?? 0);
+  const stats = getPlayerStats(playerLevel, classId, techUnlocked);
 
   const events = generateExpeditionEvents(difficulty, playerLevel, planet.dangerLevel);
 
@@ -48,12 +70,12 @@ export function createExpedition(
     currentEventIndex: 0,
     events,
     player: {
-      hp: baseHp,
-      maxHp: baseHp,
-      mp: 50,
-      maxMp: 50,
-      attack: baseAttack,
-      defense: baseDefense,
+      hp: stats.maxHp,
+      maxHp: stats.maxHp,
+      mp: stats.maxMp,
+      maxMp: stats.maxMp,
+      attack: stats.attack,
+      defense: stats.defense,
       classId,
     },
     loot: [],
