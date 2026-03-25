@@ -1,11 +1,36 @@
 import { describe, it, expect } from 'vitest';
-import { getPlanets, isPlanetUnlocked } from '../../src/starmap/planets.js';
+import { getPlanets, getPlanetDef, isPlanetUnlocked, getPlanetsInRange } from '../../src/starmap/planets.js';
 import { createGameState } from '../../src/game/gameState.js';
 
 describe('Planets', () => {
-  it('returns planet definitions', () => {
+  it('returns 5 planet definitions', () => {
     const planets = getPlanets();
-    expect(planets.length).toBeGreaterThan(0);
+    expect(planets.length).toBe(5);
+  });
+
+  it('each planet has required fields', () => {
+    const planets = getPlanets();
+    for (const planet of planets) {
+      expect(planet).toHaveProperty('id');
+      expect(planet).toHaveProperty('name');
+      expect(planet).toHaveProperty('type');
+      expect(planet).toHaveProperty('dangerLevel');
+      expect(planet).toHaveProperty('distance');
+      expect(planet).toHaveProperty('energyCost');
+      expect(planet).toHaveProperty('rewards');
+      expect(planet).toHaveProperty('requiredShip');
+      expect(planet).toHaveProperty('dungeonFloors');
+    }
+  });
+
+  it('has correct planet types', () => {
+    const planets = getPlanets();
+    const types = planets.map(p => p.type);
+    expect(types).toContain('deadWorld');
+    expect(types).toContain('hiveWorld');
+    expect(types).toContain('deathWorld');
+    expect(types).toContain('chaosSpace');
+    expect(types).toContain('forgeWorld');
   });
 
   it('first planet is always unlocked', () => {
@@ -30,6 +55,50 @@ describe('Planets', () => {
     const withShip = planets.find(p => p.requiredShip === 'frigate');
     if (withShip) {
       expect(isPlanetUnlocked(state, withShip.id)).toBe(true);
+    }
+  });
+
+  it('getPlanetDef returns correct planet', () => {
+    const planet = getPlanetDef('aridia');
+    expect(planet).toBeDefined();
+    expect(planet!.name).toBe('阿里迪亚主星');
+  });
+
+  it('getPlanetDef returns undefined for unknown', () => {
+    const planet = getPlanetDef('nonexistent');
+    expect(planet).toBeUndefined();
+  });
+
+  it('danger level is between 1 and 4', () => {
+    const planets = getPlanets();
+    for (const planet of planets) {
+      expect(planet.dangerLevel).toBeGreaterThanOrEqual(1);
+      expect(planet.dangerLevel).toBeLessThanOrEqual(4);
+    }
+  });
+
+  it('getPlanetsInRange returns only unlocked planets', () => {
+    const state = createGameState();
+    const inRange = getPlanetsInRange(state);
+    for (const planet of inRange) {
+      expect(isPlanetUnlocked(state, planet.id)).toBe(true);
+    }
+  });
+
+  it('Aridia Prime has no ship requirement', () => {
+    const planet = getPlanetDef('aridia');
+    expect(planet!.requiredShip).toBeNull();
+  });
+
+  it('Hive Tartarus requires frigate', () => {
+    const planet = getPlanetDef('hiveTartarus');
+    expect(planet!.requiredShip).toBe('frigate');
+  });
+
+  it('each planet has dungeon floors defined', () => {
+    const planets = getPlanets();
+    for (const planet of planets) {
+      expect(planet.dungeonFloors).toBeGreaterThan(0);
     }
   });
 });

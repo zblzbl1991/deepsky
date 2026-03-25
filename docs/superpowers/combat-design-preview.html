@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>战斗界面设计预览</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold-10: oklch(92% 0.04 70);
+  --gold-20: oklch(82% 0.08 70);
+  --gold-30: oklch(70% 0.12 70);
+  --gold-40: oklch(62% 0.15 70);
+  --gold-50: oklch(52% 0.16 70);
+  --gold-60: oklch(42% 0.14 70);
+  --gold-70: oklch(32% 0.10 70);
+  --gold-80: oklch(22% 0.06 70);
+  --red-10: oklch(88% 0.06 25);
+  --red-20: oklch(72% 0.12 25);
+  --red-30: oklch(58% 0.16 25);
+  --red-40: oklch(48% 0.18 25);
+  --red-50: oklch(40% 0.16 25);
+  --blue-10: oklch(90% 0.04 220);
+  --blue-20: oklch(75% 0.08 220);
+  --blue-30: oklch(60% 0.12 220);
+  --blue-40: oklch(50% 0.12 220);
+  --surface-1: oklch(17% 0.014 70);
+  --surface-2: oklch(21% 0.015 70);
+  --surface-3: oklch(25% 0.016 70);
+  --surface-4: oklch(30% 0.015 70);
+  --surface-5: oklch(36% 0.012 70);
+  --atmosphere-void: oklch(4% 0.005 70);
+  --atmosphere-blood: oklch(22% 0.06 25 / 0.3);
+  --atmosphere-ink: oklch(8% 0.008 70);
+  --font-display: 'Cinzel', serif;
+  --font-body: 'Crimson Pro', serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0a0a0f;
+  color: var(--gold-20);
+  font-family: var(--font-body);
+  padding: 2rem;
+  min-height: 100vh;
+}
+h1 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  letter-spacing: 0.2em;
+  color: var(--gold-20);
+  text-transform: uppercase;
+}
+.designs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.design-card {
+  background: var(--surface-1);
+  border: 1px solid var(--gold-50);
+  padding: 1.5rem;
+  position: relative;
+}
+.design-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-70), var(--gold-30), var(--gold-70));
+}
+.design-card h2 {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  color: var(--gold-30);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+/* ===== 设计A: 经典宝可梦风格 ===== */
+.design-a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.design-a .battle-arena {
+  background: linear-gradient(180deg, #1a1a2e 0%, #2a2a3e 60%, #1a1a2e 100%);
+  border: 1px solid var(--gold-50);
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+}
+.design-a .enemy-sprite {
+  position: absolute;
+  top: 20px;
+  right: 60px;
+  width: 80px;
+  height: 80px;
+  background: var(--red-40);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  box-shadow: 0 4px 20px rgba(200,60,60,0.4);
+  animation: enemy-idle 2s ease-in-out infinite;
+}
+.design-a .player-sprite {
+  position: absolute;
+  bottom: 20px;
+  left: 60px;
+  width: 64px;
+  height: 64px;
+  background: var(--gold-40);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 4px 20px rgba(200,160,60,0.4);
+}
+.design-a .enemy-info {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(10,10,15,0.9);
+  border: 1px solid var(--gold-50);
+  padding: 0.5rem 0.75rem;
+  min-width: 180px;
+}
+.design-a .enemy-name {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--gold-20);
+  margin-bottom: 0.25rem;
+}
+.design-a .hp-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.design-a .hp-label {
+  font-size: 0.65rem;
+  color: var(--gold-50);
+}
+.design-a .hp-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--surface-3);
+  border: 1px solid var(--gold-70);
+  position: relative;
+  overflow: hidden;
+}
+.design-a .hp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4a2, #6c4);
+  transition: width 0.3s;
+}
+.design-a .hp-bar-fill.low {
+  background: linear-gradient(90deg, #c42, #e64);
+}
+.design-a .hp-text {
+  font-size: 0.7rem;
+  color: var(--gold-30);
+  font-variant-numeric: tabular-nums;
+}
+.design-a .player-info {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: rgba(10,10,15,0.9);
+  border: 1px solid var(--gold-50);
+  padding: 0.5rem 0.75rem;
+  min-width: 160px;
+}
+.design-a .player-name {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--gold-20);
+  margin-bottom: 0.25rem;
+}
+.design-a .action-menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.design-a .action-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--gold-50);
+  color: var(--gold-20);
+  padding: 0.6rem 1rem;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.design-a .action-btn:hover {
+  background: var(--gold-60);
+  color: var(--surface-1);
+}
+.design-a .action-btn.attack { border-color: var(--red-40); color: var(--red-20); }
+.design-a .action-btn.attack:hover { background: var(--red-40); color: white; }
+.design-a .action-btn.skill { border-color: var(--blue-40); color: var(--blue-20); }
+.design-a .action-btn.skill:hover { background: var(--blue-40); color: white; }
+.design-a .action-btn.item { border-color: #6a4; color: #8c6; }
+.design-a .action-btn.item:hover { background: #4a6; color: white; }
+.design-a .action-btn.flee { border-color: var(--gold-40); color: var(--gold-30); }
+.design-a .action-btn.flee:hover { background: var(--gold-50); color: var(--surface-1); }
+.design-a .battle-log {
+  background: var(--atmosphere-ink);
+  border: 1px solid var(--surface-4);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--gold-30);
+  font-style: italic;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+@keyframes enemy-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* ===== 设计B: 帝国军械库风格 ===== */
+.design-b {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.design-b .battle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--gold-50);
+  border-left: 3px solid var(--gold-40);
+}
+.design-b .battle-title {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-30);
+}
+.design-b .floor-indicator {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--gold-50);
+  border: 1px solid var(--gold-60);
+  padding: 0.2rem 0.5rem;
+}
+.design-b .battle-arena {
+  background: var(--atmosphere-void);
+  border: 1px solid var(--surface-4);
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+}
+.design-b . combatants {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 1rem 2rem;
+  height: 100%;
+}
+.design-b .combatant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.design-b .sprite-box {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  border: 2px solid;
+  position: relative;
+}
+.design-b .enemy-sprite .sprite-box {
+  background: rgba(200,60,60,0.2);
+  border-color: var(--red-40);
+  box-shadow: 0 0 20px rgba(200,60,60,0.3);
+}
+.design-b .player-sprite .sprite-box {
+  background: rgba(200,160,60,0.2);
+  border-color: var(--gold-40);
+  box-shadow: 0 0 20px rgba(200,160,60,0.3);
+}
+.design-b .combatant-info {
+  text-align: center;
+  width: 100%;
+}
+.design-b .combatant-name {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--gold-20);
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.1em;
+}
+.design-b .stat-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.65rem;
+  color: var(--gold-50);
+  margin-bottom: 0.15rem;
+}
+.design-b .stat-bar-fill {
+  flex: 1;
+  height: 6px;
+  background: var(--surface-3);
+  border: 1px solid var(--surface-5);
+}
+.design-b .stat-bar-fill.hp { background: linear-gradient(90deg, #4a2, #6c4); }
+.design-b .stat-bar-fill.hp.low { background: linear-gradient(90deg, #c42, #e64); }
+.design-b .stat-value {
+  font-variant-numeric: tabular-nums;
+  min-width: 45px;
+  text-align: right;
+}
+.design-b .battle-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.design-b .panel-section {
+  background: var(--surface-2);
+  border: 1px solid var(--surface-4);
+  padding: 0.75rem;
+}
+.design-b .panel-section.combat-log {
+  grid-column: 1 / -1;
+  background: var(--atmosphere-ink);
+  border-color: var(--red-50);
+  border-left: 3px solid var(--red-40);
+}
+.design-b .panel-title {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  color: var(--gold-50);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--surface-4);
+}
+.design-b .actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+.design-b .action-btn {
+  background: transparent;
+  border: 1px solid;
+  padding: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.design-b .action-btn .icon {
+  font-size: 1rem;
+}
+.design-b .action-btn.attack { border-color: var(--red-40); color: var(--red-20); }
+.design-b .action-btn.attack:hover { background: var(--red-40); color: white; }
+.design-b .action-btn.skill { border-color: var(--blue-40); color: var(--blue-20); }
+.design-b .action-btn.skill:hover { background: var(--blue-40); color: white; }
+.design-b .action-btn.item { border-color: #6a4; color: #8c6; }
+.design-b .action-btn.item:hover { background: #4a6; color: white; }
+.design-b .action-btn.flee { border-color: var(--gold-40); color: var(--gold-30); }
+.design-b .action-btn.flee:hover { background: var(--gold-50); color: var(--surface-1); }
+.design-b .log-entries {
+  font-size: 0.75rem;
+  color: var(--gold-30);
+  line-height: 1.6;
+}
+.design-b .log-entry { margin-bottom: 0.25rem; }
+.design-b .log-entry.damage { color: var(--red-20); }
+.design-b .log-entry.heal { color: #8c6; }
+.design-b .log-entry.system { color: var(--gold-50); font-style: italic; }
+
+/* ===== 设计C: 全屏战斗覆盖 ===== */
+.design-c {
+  position: relative;
+  height: 420px;
+  overflow: hidden;
+}
+.design-c .fullscreen-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0f 50%, #1a1a2e 100%);
+  z-index: 0;
+}
+.design-c .battle-layout {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+.design-c .top-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background: rgba(10,10,15,0.8);
+  border: 1px solid var(--gold-60);
+  margin-bottom: 0.5rem;
+}
+.design-c .top-bar-text {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--gold-30);
+  letter-spacing: 0.15em;
+}
+.design-c .combatants-row {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+.design-c .combatant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+.design-c .sprite-container {
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  background: rgba(10,10,15,0.7);
+  border: 3px solid;
+  position: relative;
+}
+.design-c .enemy .sprite-container {
+  border-color: var(--red-40);
+  box-shadow: 0 0 30px rgba(200,60,60,0.4), inset 0 0 20px rgba(200,60,60,0.1);
+}
+.design-c .player .sprite-container {
+  border-color: var(--gold-40);
+  box-shadow: 0 0 30px rgba(200,160,60,0.4), inset 0 0 20px rgba(200,160,60,0.1);
+}
+.design-c .sprite-label {
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface-1);
+  border: 1px solid;
+  padding: 0.1rem 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.design-c .enemy .sprite-label { border-color: var(--red-40); color: var(--red-20); }
+.design-c .player .sprite-label { border-color: var(--gold-40); color: var(--gold-20); }
+.design-c .status-panel {
+  background: rgba(10,10,15,0.9);
+  border: 1px solid var(--gold-50);
+  padding: 0.6rem 1rem;
+  min-width: 200px;
+}
+.design-c .status-name {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--gold-20);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.1em;
+}
+.design-c .status-hp {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+}
+.design-c .status-hp .label {
+  font-size: 0.65rem;
+  color: var(--gold-50);
+  width: 20px;
+}
+.design-c .status-hp .bar {
+  flex: 1;
+  height: 10px;
+  background: var(--surface-3);
+  border: 1px solid var(--gold-60);
+}
+.design-c .status-hp .bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4a2, #6c4);
+  transition: width 0.3s;
+}
+.design-c .status-hp .bar-fill.low { background: linear-gradient(90deg, #c42, #e64); }
+.design-c .status-hp .value {
+  font-size: 0.7rem;
+  color: var(--gold-30);
+  font-variant-numeric: tabular-nums;
+  min-width: 60px;
+  text-align: right;
+}
+.design-c .status-mp {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.design-c .status-mp .label {
+  font-size: 0.65rem;
+  color: var(--blue-30);
+  width: 20px;
+}
+.design-c .status-mp .bar {
+  flex: 1;
+  height: 6px;
+  background: var(--surface-3);
+  border: 1px solid var(--blue-40);
+}
+.design-c .status-mp .bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #24c, #48e);
+  transition: width 0.3s;
+}
+.design-c .status-mp .value {
+  font-size: 0.65rem;
+  color: var(--blue-20);
+  font-variant-numeric: tabular-nums;
+  min-width: 40px;
+  text-align: right;
+}
+.design-c .action-panel {
+  background: rgba(10,10,15,0.95);
+  border: 1px solid var(--gold-50);
+  border-top: 3px solid var(--gold-40);
+  padding: 0.75rem;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0.75rem;
+}
+.design-c .action-menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+.design-c .action-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--gold-50);
+  color: var(--gold-20);
+  padding: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.design-c .action-btn:hover { background: var(--gold-60); color: var(--surface-1); }
+.design-c .action-btn.attack { border-color: var(--red-40); color: var(--red-20); }
+.design-c .action-btn.attack:hover { background: var(--red-40); color: white; }
+.design-c .action-btn.skill { border-color: var(--blue-40); color: var(--blue-20); }
+.design-c .action-btn.skill:hover { background: var(--blue-40); color: white; }
+.design-c .action-btn.item { border-color: #6a4; color: #8c6; }
+.design-c .action-btn.item:hover { background: #4a6; color: white; }
+.design-c .action-btn.flee { border-color: var(--gold-40); color: var(--gold-30); }
+.design-c .action-btn.flee:hover { background: var(--gold-50); color: var(--surface-1); }
+.design-c .battle-message {
+  background: var(--atmosphere-ink);
+  border: 1px solid var(--red-50);
+  border-left: 3px solid var(--red-40);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--gold-20);
+  display: flex;
+  align-items: center;
+  font-style: italic;
+}
+.design-c .message-text { flex: 1; }
+.design-c .message-text .highlight { color: var(--red-20); font-weight: 600; font-style: normal; }
+
+/* ===== 地图渲染对比 ===== */
+.map-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.map-section h3 {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--gold-30);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+.map-canvas-container {
+  background: var(--atmosphere-void);
+  border: 1px solid var(--gold-50);
+  aspect-ratio: 4/3;
+  position: relative;
+}
+.map-canvas-container canvas {
+  width: 100%;
+  height: 100%;
+}
+.map-note {
+  font-size: 0.7rem;
+  color: var(--gold-50);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .designs { grid-template-columns: 1fr; }
+  .design-a .action-menu { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<h1>⚔ 远征战斗界面设计预览 ⚔</h1>
+
+<div class="designs">
+
+  <!-- 设计A: 经典宝可梦风格 -->
+  <div class="design-card">
+    <h2>方案A：经典宝可梦布局</h2>
+    <div class="design-a">
+      <div class="battle-arena">
+        <div class="enemy-info">
+          <div class="enemy-name">太空死灵 · 复仇者</div>
+          <div class="hp-bar-container">
+            <span class="hp-label">HP</span>
+            <div class="hp-bar"><div class="hp-bar-fill" style="width: 75%"></div></div>
+            <span class="hp-text">75 / 100</span>
+          </div>
+        </div>
+        <div class="enemy-sprite">💀</div>
+        <div class="player-sprite">⚔</div>
+        <div class="player-info">
+          <div class="player-name">星际战士</div>
+          <div class="hp-bar-container">
+            <span class="hp-label">HP</span>
+            <div class="hp-bar"><div class="hp-bar-fill" style="width: 60%"></div></div>
+            <span class="hp-text">60 / 100</span>
+          </div>
+        </div>
+      </div>
+      <div class="action-menu">
+        <button class="action-btn attack">⚔ 攻击</button>
+        <button class="action-btn skill">✨ 技能</button>
+        <button class="action-btn item">🎒 道具</button>
+        <button class="action-btn flee">🏃 撤退</button>
+      </div>
+      <div class="battle-log">帝皇的战士举起了动力剑，向敌人发起冲锋！</div>
+    </div>
+  </div>
+
+  <!-- 设计B: 帝国军械库风格 -->
+  <div class="design-card">
+    <h2>方案B：帝国军械库风格</h2>
+    <div class="design-b">
+      <div class="battle-header">
+        <span class="battle-title">⚔ 遭遇战斗</span>
+        <span class="floor-indicator">第 III 层</span>
+      </div>
+      <div class="battle-arena">
+        <div class="combatants">
+          <div class="combatant enemy-sprite">
+            <div class="sprite-box">👹</div>
+            <div class="combatant-info">
+              <div class="combatant-name">兽人战NOVA</div>
+              <div class="stat-bar">
+                <span>HP</span>
+                <div class="stat-bar-fill hp" style="width: 80%"></div>
+                <span class="stat-value">80/100</span>
+              </div>
+            </div>
+          </div>
+          <div class="combatant player-sprite">
+            <div class="sprite-box">🛡</div>
+            <div class="combatant-info">
+              <div class="combatant-name">帝皇冠军</div>
+              <div class="stat-bar">
+                <span>HP</span>
+                <div class="stat-bar-fill hp" style="width: 55%"></div>
+                <span class="stat-value">55/100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="battle-panel">
+        <div class="panel-section">
+          <div class="panel-title">▸ 战斗指令</div>
+          <div class="actions">
+            <button class="action-btn attack"><span class="icon">⚔</span>攻击</button>
+            <button class="action-btn skill"><span class="icon">✨</span>技能</button>
+            <button class="action-btn item"><span class="icon">🎒</span>道具</button>
+            <button class="action-btn flee"><span class="icon">🏃</span>撤退</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <div class="panel-title">▸ 角色状态</div>
+          <div class="stat-bar" style="margin-bottom: 0.3rem">
+            <span style="font-size:0.65rem;color:var(--gold-50)">HP</span>
+            <div class="stat-bar-fill hp" style="width: 55%"></div>
+            <span class="stat-value" style="font-size:0.65rem">55/100</span>
+          </div>
+          <div class="stat-bar">
+            <span style="font-size:0.65rem;color:var(--blue-30)">MP</span>
+            <div class="stat-bar-fill" style="width: 40%;background: linear-gradient(90deg, #24c, #48e)"></div>
+            <span class="stat-value" style="font-size:0.65rem">20/50</span>
+          </div>
+        </div>
+        <div class="panel-section combat-log">
+          <div class="panel-title">▸ 战斗记录</div>
+          <div class="log-entries">
+            <div class="log-entry">你向兽人战NOVA发起攻击，造成 24 点伤害！</div>
+            <div class="log-entry damage">兽人反击！造成 12 点伤害。</div>
+            <div class="log-entry system">选择你的行动...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设计C: 全屏战斗覆盖 -->
+  <div class="design-card" style="grid-column: 1 / -1;">
+    <h2>方案C：全屏战斗覆盖（推荐）</h2>
+    <div class="design-c">
+      <div class="fullscreen-bg"></div>
+      <div class="battle-layout">
+        <div class="top-bar">
+          <span class="top-bar-text">⚔ 远征 · 第 III 层</span>
+          <span class="top-bar-text">帝皇庇佑</span>
+        </div>
+        <div class="combatants-row">
+          <div class="combatant enemy">
+            <div class="sprite-container">
+              🦇
+              <span class="sprite-label">敌人</span>
+            </div>
+            <div class="status-panel">
+              <div class="status-name">恶魔王子 · 恐虐神选</div>
+              <div class="status-hp">
+                <span class="label">HP</span>
+                <div class="bar"><div class="bar-fill" style="width: 85%"></div></div>
+                <span class="value">170 / 200</span>
+              </div>
+            </div>
+          </div>
+          <div class="combatant player">
+            <div class="sprite-container">
+              ⚔
+              <span class="sprite-label">我方</span>
+            </div>
+            <div class="status-panel">
+              <div class="status-name">星际战士 · 团长</div>
+              <div class="status-hp">
+                <span class="label">HP</span>
+                <div class="bar"><div class="bar-fill" style="width: 45%"></div></div>
+                <span class="value">45 / 100</span>
+              </div>
+              <div class="status-mp">
+                <span class="label">MP</span>
+                <div class="bar"><div class="bar-fill" style="width: 60%"></div></div>
+                <span class="value">30 / 50</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="action-panel">
+          <div class="action-menu">
+            <button class="action-btn attack">⚔ 攻击</button>
+            <button class="action-btn skill">✨ 技能</button>
+            <button class="action-btn item">🎒 道具</button>
+            <button class="action-btn flee">🏃 撤退</button>
+          </div>
+          <div class="battle-message">
+            <div class="message-text">
+              <span class="highlight">恐虐神选</span> 发起了猛烈攻击！<br>
+              你的战士举起盾牌格挡，造成了 24 点伤害。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 地图渲染对比 -->
+<div class="map-comparison">
+  <div class="map-section">
+    <h3>地牢地图渲染（当前问题）</h3>
+    <div class="map-canvas-container" id="map-broken">
+      <canvas id="canvas-broken"></canvas>
+    </div>
+    <div class="map-note">问题：canvas 尺寸为 0，无法渲染</div>
+  </div>
+  <div class="map-section">
+    <h3>地牢地图渲染（修复后预期）</h3>
+    <div class="map-canvas-container" id="map-fixed">
+      <canvas id="canvas-fixed"></canvas>
+    </div>
+    <div class="map-note">预期：24x24 格子地牢 + 战争迷雾</div>
+  </div>
+</div>
+
+<script>
+// 模拟地图渲染
+function renderDemoMap(canvasId, size) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // 设置实际像素尺寸
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+
+  const w = rect.width;
+  const h = rect.height;
+  const tileSize = Math.min(w, h) / size;
+
+  // 背景
+  ctx.fillStyle = '#0a0a0f';
+  ctx.fillRect(0, 0, w, h);
+
+  // 模拟地牢
+  const tiles = [];
+  for (let y = 0; y < size; y++) {
+    tiles[y] = [];
+    for (let x = 0; x < size; x++) {
+      if (Math.random() < 0.2) tiles[y][x] = 1; // 墙
+      else if (Math.random() < 0.03) tiles[y][x] = 2; // 出口
+      else tiles[y][x] = 0; // 地板
+    }
+  }
+
+  // 渲染格子
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const px = x * tileSize;
+      const py = y * tileSize;
+
+      if (tiles[y][x] === 1) {
+        ctx.fillStyle = '#1a1a2e';
+      } else if (tiles[y][x] === 2) {
+        ctx.fillStyle = '#c9a84c';
+      } else {
+        ctx.fillStyle = '#2a2a3e';
+      }
+      ctx.fillRect(px, py, tileSize - 1, tileSize - 1);
+    }
+  }
+
+  // 玩家
+  const playerX = Math.floor(size / 2) * tileSize + tileSize / 2;
+  const playerY = Math.floor(size / 2) * tileSize + tileSize / 2;
+  ctx.fillStyle = '#4a8';
+  ctx.beginPath();
+  ctx.arc(playerX + tileSize/2, playerY + tileSize/2, tileSize/3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 敌人
+  ctx.fillStyle = '#c44';
+  ctx.fillRect(3 * tileSize + 4, 3 * tileSize + 4, tileSize - 8, tileSize - 8);
+
+  // 物品
+  ctx.fillStyle = '#48c';
+  ctx.fillRect(6 * tileSize + 6, 5 * tileSize + 6, tileSize - 12, tileSize - 12);
+}
+
+// 修复后的地图（模拟）
+renderDemoMap('canvas-fixed', 16);
+
+// 模拟损坏的地图
+const brokenCanvas = document.getElementById('canvas-broken');
+if (brokenCanvas) {
+  const ctx = brokenCanvas.getContext('2d');
+  ctx.fillStyle = '#0a0a0f';
+  ctx.fillRect(0, 0, brokenCanvas.width, brokenCanvas.height);
+  ctx.fillStyle = '#c44';
+  ctx.font = '12px Cinzel';
+  ctx.fillText('Canvas Size: 0 x 0', 10, 50);
+  ctx.fillText('无法渲染地牢', 10, 70);
+}
+</script>
+
+</body>
+</html>

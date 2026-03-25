@@ -1,190 +1,1617 @@
-* {
+/* ============================================================
+   DEEP SKY — COSMIC COMMAND DESIGN SYSTEM
+   Destiny-style Space Opera · Silver-White Futurism
+   ============================================================ */
+
+/* ─── Google Fonts ─── */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+/* ============================================================
+   1. DESIGN TOKENS — PRIMITIVES
+   ============================================================ */
+:root {
+  /* ── Surface Palette (OKLCH, silver-white with cool blue tint) ── */
+  --surface-1: oklch(75% 0.01 250);       /* Main bg — silver-white */
+  --surface-2: oklch(82% 0.008 250);      /* Panel bg */
+  --surface-3: oklch(88% 0.006 250);      /* Card bg / dim borders */
+  --surface-4: oklch(70% 0.012 250);      /* Borders */
+  --surface-5: oklch(60% 0.015 250);      /* Scrollbar / hover */
+
+  /* ── Gold family — imperial heritage accent, brighter for contrast on silver ── */
+  --gold-10: oklch(97% 0.02 80);
+  --gold-20: oklch(92% 0.05 80);
+  --gold-30: oklch(84% 0.08 80);
+  --gold-40: oklch(76% 0.10 80);
+  --gold-50: oklch(66% 0.10 80);
+  --gold-60: oklch(54% 0.08 80);
+  --gold-70: oklch(44% 0.06 80);
+  --gold-80: oklch(34% 0.04 80);
+
+  /* ── Blue family — primary tech/energy ── */
+  --blue-10: oklch(95% 0.03 250);
+  --blue-20: oklch(82% 0.08 250);
+  --blue-30: oklch(70% 0.12 250);
+  --blue-40: oklch(60% 0.14 250);
+  --blue-50: oklch(48% 0.12 250);
+
+  /* ── Red family — danger/combat ── */
+  --red-10: oklch(90% 0.06 25);
+  --red-20: oklch(75% 0.12 25);
+  --red-30: oklch(60% 0.16 25);
+  --red-40: oklch(50% 0.18 25);
+  --red-50: oklch(42% 0.14 25);
+
+  /* ── Atmospheric surfaces (darker — for dungeon/combat contrast) ── */
+  --atmosphere-void:  oklch(18% 0.02 250);      /* Dungeon bg — deep void */
+  --atmosphere-blood: oklch(25% 0.05 25 / 0.25); /* Combat panel tint */
+  --atmosphere-ink:   oklch(22% 0.02 250);      /* Log dark bg */
+  --atmosphere-deep:  oklch(20% 0.02 250 / 0.5); /* Dungeon log tint */
+
+  /* ── Semantic aliases ── */
+  --bg:          var(--surface-1);
+  --bg-panel:    var(--surface-2);
+  --bg-card:     var(--surface-3);
+  --border:      var(--surface-4);
+  --border-dim:  var(--surface-3);
+  --border-gold: var(--gold-60);
+  --border-red:  var(--red-40);
+
+  /* Text — dark on silver-white bg */
+  --text-primary:   oklch(18% 0.02 250);
+  --text-secondary: oklch(35% 0.03 250);
+  --text-dim:       oklch(50% 0.02 250);
+  --text-danger:    var(--red-40);
+
+  --accent-gold:    var(--gold-60);
+  --accent-red:     var(--red-40);
+  --accent-blue:    var(--blue-50);
+  --accent-success: oklch(50% 0.16 155);
+
+  /* ── Typography ── */
+  --font-display: 'Rajdhani', sans-serif;
+  --font-body:    'Inter', 'Noto Sans SC', sans-serif;
+
+  /* Type scale — increased minimums */
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg:   1.25rem;   /* 20px */
+  --text-xl:   1.563rem;  /* 25px */
+  --text-2xl:  1.953rem;  /* 31px */
+  --text-3xl:  2.441rem;  /* 39px */
+
+  /* Line heights */
+  --leading-tight:  1.15;
+  --leading-snug:   1.3;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+
+  /* Letter spacing */
+  --tracking-tight:  -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.04em;
+  --tracking-wider:  0.08em;
+  --tracking-widest: 0.15em;
+
+  /* ── Spacing (4pt base) ── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ── Motion ── */
+  --ease-out-quart:  cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint:  cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:         cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out:     cubic-bezier(0.65, 0, 0.35, 1);
+
+  --duration-fast:   100ms;
+  --duration-normal: 200ms;
+  --duration-slow:  400ms;
+  --duration-slower: 600ms;
+
+  /* ── Borders & Radii ── */
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+
+  /* ── Glass & Glow tokens ── */
+  /* Tier 3 only: overlays, tooltips, save indicator */
+  --glass-bg:     oklch(88% 0.008 250 / 0.85);
+  --glass-border: oklch(70% 0.03 250 / 0.4);
+  --glow-blue:    0 0 10px oklch(60% 0.14 250 / 0.25);
+  --glow-gold:    0 0 10px oklch(76% 0.10 80 / 0.25);
+  --glow-red:     0 0 10px oklch(50% 0.18 25 / 0.25);
+
+  /* ── Shadows / Elevation (softer for light bg) ── */
+  --shadow-sm: 0 2px 8px oklch(0% 0 0 / 0.08);
+  --shadow-md: 0 4px 16px oklch(0% 0 0 / 0.1);
+  --shadow-lg: 0 8px 32px oklch(0% 0 0 / 0.12);
+
+  /* ── Layout ── */
+  --sidebar-width: 220px;
+  --panel-gap: var(--space-4);
+}
+
+/* ============================================================
+   2. RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: #0a0a0f;
-  color: #c9a84c;
-  font-family: 'Courier New', monospace;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
   min-height: 100vh;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(ellipse at 20% 30%, oklch(82% 0.02 260 / 0.5) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, oklch(78% 0.03 270 / 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, oklch(80% 0.02 250 / 0.35) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
+/* Custom scrollbar — blue on silver */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--surface-2); }
+::-webkit-scrollbar-thumb { background: var(--surface-5); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--blue-40); }
+
+/* Text selection */
+::selection { background: var(--blue-30); color: white; }
+
+/* Focus visible */
+:focus-visible {
+  outline: 2px solid var(--blue-40);
+  outline-offset: 2px;
 }
 
 #app {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 20px;
+  display: flex;
+  min-height: 100vh;
 }
 
 .view {
   display: none;
 }
-
 .view.active {
   display: block;
+  animation: view-enter var(--duration-slow) var(--ease-out-quart) both;
 }
 
-/* Header */
-#header h1 {
-  font-size: 1.5rem;
-  color: #c9a84c;
-  letter-spacing: 4px;
-  margin-bottom: 10px;
+@keyframes view-enter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
+/* ============================================================
+   3. TYPOGRAPHY
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   4. SIDEBAR NAVIGATION
+   ============================================================ */
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--surface-2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-6) var(--space-4);
+  z-index: 50;
+}
+
+/* ── Brand ── */
+.sidebar-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-dim);
+  margin-bottom: var(--space-6);
+
+  span {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--text-primary);
+  }
+}
+
+.brand-icon {
+  color: var(--blue-50);
+}
+
+/* ── Sidebar Nav ── */
 #nav {
   display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
 }
 
 .nav-btn {
-  background: #1a1a2e;
-  color: #666;
-  border: 1px solid #333;
-  padding: 8px 16px;
+  position: relative;
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
   cursor: pointer;
-  font-family: inherit;
-  font-size: 0.85rem;
-  letter-spacing: 1px;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  text-align: left;
+  width: 100%;
+  transition:
+    color var(--duration-fast) var(--ease-out-quart),
+    background var(--duration-fast) var(--ease-out-quart),
+    border-color var(--duration-fast) var(--ease-out-quart);
+
+  &:hover:not(.active) {
+    color: var(--text-primary);
+    background: var(--surface-3);
+  }
+
+  &.active {
+    color: var(--text-primary);
+    background: oklch(from var(--blue-50) r g b / 0.1);
+    border-color: var(--blue-50);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--blue-30);
+    outline-offset: 2px;
+  }
 }
 
-.nav-btn.active {
-  color: #c9a84c;
-  border-color: #c9a84c;
-}
-
-.nav-btn:hover {
-  border-color: #c9a84c;
-}
-
-/* Resources */
-#resource-panel {
+/* ── Sidebar Footer ── */
+.sidebar-footer {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-dim);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-dim);
 }
 
-.resource-row {
-  background: #12121f;
-  border: 1px solid #1e1e3a;
-  padding: 8px 14px;
+.sidebar-footer-dim {
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+
+/* ============================================================
+   5. MAIN CONTENT AREA
+   ============================================================ */
+#content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: var(--space-6) var(--space-8) var(--space-16);
+  min-height: 100vh;
+}
+
+#content-header {
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-dim);
+}
+
+#content-header h1 {
+  font-size: var(--text-xl);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   5. SECTION HEADERS — Catalog Labels
+   ============================================================ */
+section h2 {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: var(--space-4);
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-width: 180px;
+  gap: var(--space-3);
+
+  /* Diamond rosette */
+  &::before {
+    content: '▸';
+    font-size: 0.6em;
+    color: var(--blue-50);
+    text-shadow: 0 0 6px oklch(60% 0.14 250 / 0.4);
+  }
+
+  /* Fading line */
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      var(--surface-4) 0%,
+      transparent 100%
+    );
+  }
 }
 
-.resource-icon { font-size: 1.2rem; }
-.resource-name { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
-.resource-value { color: #e0d0a0; font-weight: bold; font-size: 1.1rem; min-width: 60px; text-align: right; }
-.resource-rate { color: #4a8; font-size: 0.75rem; }
+/* ============================================================
+   6. RESOURCE PANEL — Cosmic Accounting
+   ============================================================ */
+#resource-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
 
-/* Buildings */
-#building-panel h2 { color: #888; font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 10px; }
+/* ── Tier base ── */
+.resource-tier {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* Primary — twin pillars */
+.resource-tier--primary {
+  grid-template-columns: 1fr 1fr;
+}
+
+.resource-tier--primary .resource-row {
+  flex-direction: column;
+  align-items: stretch;
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  position: relative;
+  transition:
+    border-color var(--duration-fast) var(--ease-out-quart),
+    background var(--duration-fast) var(--ease-out-quart);
+
+  /* Left blue accent bar */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--blue-50);
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  }
+
+  &:hover {
+    background: var(--surface-3);
+    border-color: var(--blue-50);
+  }
+}
+
+/* Secondary — compact cards */
+.resource-tier--secondary {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.resource-tier--secondary .resource-row {
+  background: var(--surface-2);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  transition:
+    border-color var(--duration-fast) var(--ease-out-quart),
+    background var(--duration-fast) var(--ease-out-quart);
+
+  &:hover {
+    background: var(--surface-3);
+    border-color: var(--border);
+  }
+}
+
+/* ── Shared resource elements ── */
+.resource-icon {
+  font-size: var(--text-lg);
+  width: 28px;
+  text-align: center;
+  filter: saturate(1.3) brightness(1.1);
+  flex-shrink: 0;
+}
+
+.resource-tier--primary .resource-icon {
+  font-size: var(--text-2xl);
+  width: 36px;
+  margin-bottom: var(--space-2);
+}
+
+.resource-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-name {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  line-height: 1;
+  margin-bottom: var(--space-1);
+}
+
+.resource-tier--primary .resource-name {
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-2);
+}
+
+.resource-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.resource-tier--primary .resource-value {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-1);
+}
+
+.resource-tier--secondary .resource-value {
+  font-size: var(--text-lg);
+}
+
+.resource-rate {
+  font-size: var(--text-xs);
+  color: var(--accent-success);
+  letter-spacing: var(--tracking-wide);
+  font-variant-numeric: tabular-nums;
+}
+
+.resource-tier--primary .resource-rate {
+  font-size: var(--text-sm);
+}
+
+/* ── Capacity bar ── */
+.resource-bar {
+  width: 100%;
+  height: 3px;
+  background: var(--surface-4);
+  border-radius: 2px;
+  margin-top: var(--space-2);
+  position: relative;
+  overflow: hidden;
+}
+
+.resource-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue-50), var(--blue-30));
+  border-radius: 2px;
+  transition: width var(--duration-slow) var(--ease-out-quart);
+  width: 0%;
+}
+
+/* ============================================================
+   7. BUILDING PANEL
+   ============================================================ */
+#building-panel {
+  margin-bottom: var(--space-8);
+}
+
+#building-list {
+  display: grid;
+  gap: var(--space-3);
+}
 
 .building-card {
-  background: #12121f;
-  border: 1px solid #1e1e3a;
-  padding: 14px;
-  margin-bottom: 8px;
+  position: relative;
+  background: var(--surface-2);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  transition:
+    border-color var(--duration-fast) var(--ease-out-quart),
+    background var(--duration-fast) var(--ease-out-quart);
+
+  &:hover:not(.locked) {
+    background: var(--surface-3);
+    border-color: var(--border);
+  }
+
+  &.locked {
+    opacity: 0.4;
+  }
+
+  /* Left accent stripe — always visible */
+  &::before {
+    content: '';
+    position: absolute;
+    top: var(--space-3);
+    left: 0;
+    width: 3px;
+    height: calc(100% - var(--space-6));
+    background: var(--blue-50);
+    border-radius: 0 2px 2px 0;
+  }
 }
 
-.building-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.building-name { color: #c9a84c; font-size: 1rem; letter-spacing: 1px; }
-.building-level { color: #666; font-size: 0.8rem; }
-.building-desc { color: #555; font-size: 0.75rem; margin-bottom: 8px; font-style: italic; }
-.building-cost { color: #888; font-size: 0.8rem; margin-bottom: 8px; }
-.building-production { color: #4a8; font-size: 0.8rem; margin-bottom: 8px; }
+.building-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-2);
+}
+
+.building-name {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-primary);
+}
+
+.building-level {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+}
+
+.building-desc {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+  margin-bottom: var(--space-3);
+  line-height: var(--leading-snug);
+}
+
+/* ── Building body — stats + description ── */
+.building-body {
+  margin-bottom: var(--space-3);
+}
+
+/* ── Stat rows ── */
+.building-stat-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+/* Output — left accent stripe */
+.building-output {
+  position: relative;
+  padding-left: var(--space-3);
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    bottom: 2px;
+    width: 2px;
+    background: var(--accent-success);
+    border-radius: 1px;
+  }
+}
+
+.stat-label {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  min-width: 56px;
+}
+
+.building-cost-row .stat-label {
+  color: var(--red-40);
+}
+
+.stat-value {
+  font-size: var(--text-sm);
+}
+
+.building-production {
+  color: var(--accent-success);
+}
+
+.building-cost {
+  color: var(--red-40);
+}
+
+/* ── Description — de-emphasized ── */
+.building-desc {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-3);
+  line-height: var(--leading-snug);
+  opacity: 0.8;
+}
+
+/* ── Actions ── */
+.building-actions {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-dim);
+}
 
 .upgrade-btn {
-  background: #1a1a2e;
-  color: #c9a84c;
-  border: 1px solid #c9a84c;
-  padding: 6px 14px;
+  position: relative;
+  background: transparent;
+  color: var(--gold-60);
+  border: 1px solid var(--gold-60);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-6);
   cursor: pointer;
-  font-family: inherit;
-  font-size: 0.8rem;
-  letter-spacing: 1px;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  transition:
+    background var(--duration-fast) var(--ease-out-quart),
+    color var(--duration-fast) var(--ease-out-quart),
+    border-color var(--duration-fast) var(--ease-out-quart),
+    box-shadow var(--duration-fast) var(--ease-out-quart);
+
+  &:hover:not(:disabled) {
+    background: oklch(from var(--gold-60) r g b / 0.1);
+    border-color: var(--gold-70);
+    color: var(--gold-70);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    color: var(--text-dim);
+    border-style: dashed;
+    border-color: var(--border-dim);
+    cursor: not-allowed;
+    background: var(--surface-1);
+  }
 }
 
-.upgrade-btn:hover:not(:disabled) { background: #2a2a4e; }
-.upgrade-btn:disabled { color: #444; border-color: #333; cursor: not-allowed; }
-.building-card.locked { opacity: 0.5; }
+/* ============================================================
+   8. STAR MAP — SHIPYARD & PLANETS
+   ============================================================ */
+#shipyard-panel {
+  margin-bottom: var(--space-6);
+}
 
-/* Shipyard */
-#shipyard-panel { margin-bottom: 20px; }
+#ship-list {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
 
 .ship-card {
-  background: #12121f;
-  border: 1px solid #1e1e3a;
-  padding: 14px;
-  margin-bottom: 8px;
+  position: relative;
+  background: var(--surface-2);
+  border: 1px solid var(--border-dim);
+  border-top: 3px solid var(--blue-50);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  transition:
+    background var(--duration-fast) var(--ease-out-quart),
+    border-color var(--duration-fast) var(--ease-out-quart);
+
+  &:hover:not(.locked) {
+    background: var(--surface-3);
+    border-color: var(--border);
+    border-top-color: var(--blue-40);
+  }
+
+  &.built {
+    border-top-color: var(--accent-success);
+  }
 }
-.ship-card.built { border-color: #4a8; }
-.ship-name { color: #c9a84c; font-size: 1rem; letter-spacing: 1px; }
-.ship-desc { color: #555; font-size: 0.75rem; font-style: italic; margin: 4px 0 8px; }
-.ship-cost { color: #888; font-size: 0.8rem; margin-bottom: 8px; }
-.ship-status { font-size: 0.8rem; margin-bottom: 8px; }
-.ship-status.built { color: #4a8; }
-.ship-status.locked { color: #888; }
+
+.ship-name {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.ship-desc {
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  margin-bottom: var(--space-3);
+}
+
+.ship-meta {
+  display: flex;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.ship-cost { color: var(--red-40); }
+.ship-status {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+.ship-status.built { color: var(--accent-success); }
+.ship-status.locked { color: var(--text-dim); }
 
 /* Planets */
-.planet-card {
-  background: #12121f;
-  border: 1px solid #1e1e3a;
-  padding: 14px;
-  margin-bottom: 8px;
-  cursor: pointer;
+#planet-list {
+  display: grid;
+  gap: var(--space-3);
 }
-.planet-card:hover:not(.locked) { border-color: #c9a84c; }
-.planet-card.locked { opacity: 0.4; cursor: not-allowed; }
-.planet-header { display: flex; justify-content: space-between; align-items: center; }
-.planet-name { color: #c9a84c; font-size: 1rem; letter-spacing: 1px; }
-.planet-danger { color: #c44; font-size: 0.75rem; letter-spacing: 1px; }
-.planet-desc { color: #555; font-size: 0.75rem; font-style: italic; margin: 4px 0 8px; }
-.planet-info { color: #888; font-size: 0.8rem; }
 
-/* Dungeon HUD */
-#dungeon-hud { display: flex; gap: 16px; padding: 8px 14px; background: #12121f; border: 1px solid #1e1e3a; margin-bottom: 8px; font-size: 0.85rem; letter-spacing: 1px; }
-#dungeon-container { background: #000; border: 1px solid #1e1e3a; margin-bottom: 8px; overflow: hidden; }
-#dungeon-canvas { display: block; }
+.planet-card {
+  position: relative;
+  background: var(--surface-2);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  padding-left: calc(var(--space-5) + 5px);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out-quart),
+    border-color var(--duration-fast) var(--ease-out-quart);
 
-/* Combat */
-#combat-panel { background: #1a0a0a; border: 1px solid #c44; padding: 14px; margin-bottom: 8px; }
-#combat-info { color: #c44; font-size: 1rem; margin-bottom: 8px; }
-#combat-log { color: #888; font-size: 0.75rem; max-height: 80px; overflow-y: auto; margin-bottom: 8px; }
-#combat-log p { margin-bottom: 2px; }
-#combat-actions { display: flex; gap: 8px; }
-.combat-btn { background: #2a0a0a; color: #c44; border: 1px solid #c44; padding: 8px 20px; cursor: pointer; font-family: inherit; font-size: 0.85rem; letter-spacing: 2px; }
-.combat-btn:hover:not(:disabled) { background: #3a1a1a; }
+  &:hover:not(.locked) {
+    background: var(--surface-3);
+    border-color: var(--border);
+  }
+
+  &.locked {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  /* Permanent danger accent bar */
+  &::before {
+    content: '';
+    position: absolute;
+    top: var(--space-3);
+    left: 0;
+    width: 3px;
+    height: calc(100% - var(--space-6));
+    background: var(--red-30);
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* Danger-level color variants */
+  &[data-danger="1"]::before { background: var(--accent-success); }
+  &[data-danger="2"]::before { background: var(--gold-60); }
+  &[data-danger="3"]::before { background: var(--red-30); }
+  &[data-danger="4"]::before { background: var(--red-40); }
+}
+
+.planet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.planet-name {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-primary);
+}
+
+.planet-danger {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--red-40);
+  border: 1px solid var(--red-50);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+}
+
+.planet-desc {
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  margin-bottom: var(--space-3);
+  line-height: var(--leading-snug);
+}
+
+.planet-info {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   9. DUNGEON VIEW
+   ============================================================ */
+#dungeon-hud {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue-50);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-secondary);
+}
+
+#dungeon-floor {
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+}
+
+#dungeon-hp { color: var(--red-40); }
+#dungeon-atk { color: var(--gold-60); }
+#dungeon-def { color: var(--blue-50); }
+#dungeon-exp { color: var(--accent-success); }
+
+.hud-divider {
+  font-size: var(--text-xs);
+  color: var(--blue-50);
+  line-height: 1;
+  opacity: 0.6;
+}
+
+/* Dungeon canvas container */
+#dungeon-container {
+  position: relative;
+  background: var(--atmosphere-void);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--blue-50);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-3);
+  overflow: hidden;
+  animation: dungeon-reveal 500ms var(--ease-out-quart) both;
+
+  /* Top corner accents */
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  &::before {
+    top: 0;
+    left: 0;
+    border-top: 2px solid var(--blue-40);
+    border-left: 2px solid var(--blue-40);
+    border-radius: var(--radius-lg) 0 0 0;
+  }
+  &::after {
+    top: 0;
+    right: 0;
+    border-top: 2px solid var(--blue-40);
+    border-right: 2px solid var(--blue-40);
+    border-radius: 0 var(--radius-lg) 0 0;
+  }
+}
+
+@keyframes dungeon-reveal {
+  from {
+    opacity: 0;
+    transform: scaleY(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);
+  }
+}
+
+/* Bottom corner pseudo-elements */
+#dungeon-container .corner-br,
+#dungeon-container .corner-bl {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  z-index: 10;
+  pointer-events: none;
+}
+#dungeon-container .corner-br {
+  bottom: 0;
+  right: 0;
+  border-bottom: 2px solid var(--blue-40);
+  border-right: 2px solid var(--blue-40);
+  border-radius: 0 0 var(--radius-lg) 0;
+}
+#dungeon-container .corner-bl {
+  bottom: 0;
+  left: 0;
+  border-bottom: 2px solid var(--blue-40);
+  border-left: 2px solid var(--blue-40);
+  border-radius: 0 0 0 var(--radius-lg);
+}
+
+#dungeon-canvas {
+  display: block;
+  width: 100%;
+  image-rendering: pixelated;
+}
 
 /* Dungeon log */
-#dungeon-log { color: #555; font-size: 0.75rem; max-height: 60px; overflow-y: auto; margin-bottom: 8px; padding: 4px; }
+#dungeon-log {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+  max-height: 60px;
+  overflow-y: auto;
+  margin-bottom: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-left: 2px solid var(--border-dim);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  line-height: var(--leading-relaxed);
+  background: var(--atmosphere-deep);
+}
 
-/* Controls */
-#dungeon-controls { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 8px; }
-.control-row { display: flex; gap: 4px; }
-.move-btn { background: #1a1a2e; color: #c9a84c; border: 1px solid #333; width: 48px; height: 48px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.move-btn:hover { border-color: #c9a84c; }
+/* D-Pad Controls */
+#dungeon-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
 
-#dungeon-result { background: #12121f; border: 1px solid #c9a84c; padding: 20px; text-align: center; margin-bottom: 8px; }
-#dungeon-result h2 { color: #c9a84c; margin-bottom: 10px; }
-#dungeon-result p { color: #888; margin-bottom: 8px; }
+.control-row {
+  display: flex;
+  gap: var(--space-2);
+}
 
-/* Save indicator */
+.move-btn {
+  background: var(--surface-2);
+  color: var(--blue-50);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  width: 52px;
+  height: 52px;
+  font-size: var(--text-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background var(--duration-fast) var(--ease-out-quart),
+    border-color var(--duration-fast) var(--ease-out-quart),
+    color var(--duration-fast) var(--ease-out-quart);
+
+  &:hover {
+    background: var(--surface-3);
+    border-color: var(--blue-50);
+    color: var(--blue-40);
+  }
+
+  &:active {
+    background: var(--surface-4);
+    color: var(--blue-40);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--blue-40);
+    outline-offset: 2px;
+  }
+}
+
+/* Dungeon result */
+#dungeon-result {
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--blue-40);
+  border-top: 2px solid var(--gold-40);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-5);
+  text-align: center;
+  margin-bottom: var(--space-3);
+  box-shadow: var(--shadow-md);
+
+  h2 {
+    font-size: var(--text-xl);
+    color: var(--text-primary);
+    letter-spacing: var(--tracking-widest);
+    margin-bottom: var(--space-4);
+  }
+
+  p {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-3);
+    line-height: var(--leading-relaxed);
+  }
+}
+
+/* ============================================================
+   10. SAVE INDICATOR
+   ============================================================ */
 #save-indicator {
   position: fixed;
-  bottom: 10px;
-  right: 10px;
-  color: #4a8;
-  font-size: 0.7rem;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--blue-40);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--blue-50);
   opacity: 0;
-  transition: opacity 0.3s;
-  letter-spacing: 1px;
+  pointer-events: none;
+  z-index: 100;
+
+  svg {
+    color: var(--blue-50);
+    flex-shrink: 0;
+  }
+
+  &.flash {
+    opacity: 1;
+    animation: save-confirm 2s var(--ease-out-quart) forwards;
+  }
 }
-#save-indicator.flash {
-  opacity: 1;
+
+@keyframes save-confirm {
+  0%   { opacity: 0; transform: translateY(6px); }
+  15%  { opacity: 1; transform: translateY(0); }
+  70%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ============================================================
+   11. ANIMATIONS & ENTRANCE STAGGER
+   ============================================================ */
+.stagger-enter > * {
+  animation: stagger-item var(--duration-slow) var(--ease-out-quart) both;
+}
+
+.stagger-enter > *:nth-child(1)  { animation-delay: 0ms; }
+.stagger-enter > *:nth-child(2)  { animation-delay: 60ms; }
+.stagger-enter > *:nth-child(3)  { animation-delay: 120ms; }
+.stagger-enter > *:nth-child(4)  { animation-delay: 180ms; }
+.stagger-enter > *:nth-child(5)  { animation-delay: 240ms; }
+.stagger-enter > *:nth-child(6)  { animation-delay: 300ms; }
+.stagger-enter > *:nth-child(7)  { animation-delay: 360ms; }
+.stagger-enter > *:nth-child(8)  { animation-delay: 420ms; }
+
+@keyframes stagger-item {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Resource value change flash */
+@keyframes value-flash {
+  0%   { color: var(--text-primary); }
+  30%  { color: var(--blue-40); text-shadow: 0 0 8px oklch(60% 0.14 250 / 0.4); }
+  100% { color: var(--text-primary); }
+}
+
+.resource-value.updated {
+  animation: value-flash 400ms var(--ease-out-quart);
+}
+
+/* ============================================================
+   9b. BATTLE VIEW — Cosmic Arsenal Style
+   ============================================================ */
+
+.battle-screen {
+  animation: battle-enter 300ms var(--ease-out-quart) both;
+}
+
+@keyframes battle-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.battle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-5);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--red-40);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+}
+
+.battle-title {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--red-40);
+}
+
+.floor-indicator {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  color: var(--blue-50);
+  border: 1px solid var(--blue-50);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+}
+
+.battle-arena {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--atmosphere-void);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--red-40);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-8);
+  margin-bottom: var(--space-3);
+  min-height: 160px;
+}
+
+.combatant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.combatant.enemy { align-items: flex-start; }
+.combatant.player { align-items: flex-end; }
+
+.sprite-box {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  background: oklch(10% 0.02 250 / 0.7);
+  border: 2px solid;
+  border-radius: var(--radius-md);
+}
+
+.combatant.enemy .sprite-box {
+  border-color: var(--red-40);
+  box-shadow: 0 0 20px oklch(50% 0.18 25 / 0.4), inset 0 0 12px oklch(50% 0.18 25 / 0.1);
+}
+
+.combatant.player .sprite-box {
+  border-color: var(--blue-40);
+  box-shadow: 0 0 20px oklch(60% 0.14 250 / 0.4), inset 0 0 12px oklch(60% 0.14 250 / 0.1);
+}
+
+.combatant-info {
+  text-align: center;
+  min-width: 140px;
+}
+
+.combatant.enemy .combatant-info { text-align: left; }
+.combatant.player .combatant-info { text-align: right; }
+
+.combatant-name {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+
+/* Battle stat bars (scoped to battle context) */
+.battle-arena .stat-bar,
+.battle-panel .stat-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: 2px;
+}
+
+.battle-arena .stat-label,
+.battle-panel .stat-label {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--blue-50);
+  width: 20px;
+  text-align: right;
+}
+
+.battle-arena .stat-bar-bg,
+.battle-panel .stat-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: var(--surface-4);
+  border: 1px solid var(--surface-5);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.battle-panel .stat-bar-bg.mp {
+  border-color: var(--blue-50);
+}
+
+.battle-arena .stat-bar-fill,
+.battle-panel .stat-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.battle-arena .stat-bar-fill.hp,
+.battle-panel .stat-bar-fill.hp {
+  background: linear-gradient(90deg, #4a2, #6c4);
+}
+
+.battle-arena .stat-bar-fill.hp.medium,
+.battle-panel .stat-bar-fill.hp.medium {
+  background: linear-gradient(90deg, #a4, #c6);
+}
+
+.battle-arena .stat-bar-fill.hp.low,
+.battle-panel .stat-bar-fill.hp.low {
+  background: linear-gradient(90deg, #c42, #e64);
+}
+
+.battle-arena .stat-bar-fill.mp,
+.battle-panel .stat-bar-fill.mp {
+  background: linear-gradient(90deg, #24c, #48e);
+}
+
+.battle-arena .stat-value,
+.battle-panel .stat-value {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  min-width: 55px;
+  text-align: right;
+}
+
+.battle-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.battle-panel .panel-section {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--blue-50);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.battle-panel .actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.action-btn {
+  background: transparent;
+  border: 1px solid;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out-quart),
+    color var(--duration-fast) var(--ease-out-quart),
+    box-shadow var(--duration-fast) var(--ease-out-quart);
+}
+
+.action-btn.attack {
+  border-color: var(--red-40);
+  color: var(--red-40);
+}
+.action-btn.attack:hover {
+  background: oklch(from var(--red-40) r g b / 0.12);
+  color: var(--red-50);
+}
+
+.action-btn.skill {
+  border-color: var(--blue-50);
+  color: var(--blue-50);
+}
+.action-btn.skill:hover:not(:disabled) {
+  background: oklch(from var(--blue-50) r g b / 0.1);
+  color: var(--blue-40);
+}
+.action-btn.skill:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.action-btn.flee {
+  border-color: var(--gold-60);
+  color: var(--gold-60);
+  grid-column: 1 / -1;
+}
+.action-btn.flee:hover {
+  background: oklch(from var(--gold-60) r g b / 0.1);
+  color: var(--gold-70);
+}
+
+.player-status-brief {
+  margin-bottom: var(--space-2);
+}
+
+.skill-cooldowns {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--text-xs);
+  color: var(--blue-50);
+  margin-top: var(--space-2);
+}
+
+.cooldown-label {
+  font-family: var(--font-display);
+}
+
+.cooldown-item {
+  padding: 1px var(--space-2);
+  background: var(--surface-3);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-sm);
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+}
+
+.cooldown-item.ready {
+  color: var(--accent-success);
+  border-color: var(--accent-success);
+}
+
+.cooldown-item.on-cooldown {
+  color: var(--red-30);
+  border-color: var(--red-40);
+}
+
+.combat-log {
+  grid-column: 1 / -1;
+  background: var(--atmosphere-ink);
+  border-color: var(--red-50);
+  border-left: 3px solid var(--red-40);
+  border-radius: var(--radius-md);
+}
+
+.log-entries {
+  max-height: 80px;
+  overflow-y: auto;
+  font-size: var(--text-sm);
+  color: var(--blue-20);
+  line-height: var(--leading-relaxed);
+}
+
+.log-entry { margin-bottom: var(--space-1); }
+.log-entry.damage { color: var(--red-30); }
+.log-entry.heal { color: var(--accent-success); }
+.log-entry.system { color: var(--blue-30); font-style: italic; }
+.log-entry.player-action { color: oklch(85% 0.04 250); }
+
+#dungeon-explore { display: block; }
+#dungeon-explore.hidden { display: none; }
+
+/* ============================================================
+   12. REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .view.active {
+    animation: none;
+    display: block;
+  }
+
+  #save-indicator {
+    animation: none !important;
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   13. RESPONSIVE ADJUSTMENTS
+   ============================================================ */
+
+/* Tablet — collapse sidebar to top bar */
+@media (max-width: 768px) {
+  #app {
+    flex-direction: column;
+  }
+
+  #sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    padding: var(--space-3) var(--space-4);
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-brand {
+    flex-direction: row;
+    gap: var(--space-2);
+    padding-bottom: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+    margin-right: var(--space-4);
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  #nav {
+    flex-direction: row;
+    gap: var(--space-1);
+  }
+
+  .nav-btn {
+    text-align: center;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-xs);
+  }
+
+  #content {
+    margin-left: 0;
+    padding: var(--space-4) var(--space-4) var(--space-12);
+  }
+
+  #content-header h1 {
+    font-size: var(--text-base);
+  }
+}
+
+/* Mobile — compact layout */
+@media (max-width: 600px) {
+  /* Resource panel — two-tier stack on mobile */
+  .resource-tier--primary,
+  .resource-tier--secondary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .resource-tier--primary .resource-row {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .resource-tier--primary .resource-value {
+    font-size: var(--text-xl);
+  }
+
+  .resource-tier--secondary .resource-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .resource-tier--secondary .resource-value {
+    font-size: var(--text-base);
+  }
+
+  .resource-bar {
+    width: 100%;
+    margin-top: var(--space-2);
+  }
+
+  #dungeon-hud {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+  }
+
+  .move-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .building-card,
+  .ship-card,
+  .planet-card {
+    padding: var(--space-3) var(--space-4);
+  }
 }

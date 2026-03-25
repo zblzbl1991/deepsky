@@ -1,0 +1,124 @@
+[
+  {
+    "id": "explore_corridor",
+    "type": "explore",
+    "descriptions": [
+      "前方是一条漆黑的走廊，远处传来低沉的嗡鸣声……",
+      "废弃的通道中，墙壁上的铭文已经模糊不清。",
+      "走廊尽头的门半开着，里面透出微弱的蓝光。"
+    ],
+    "successReward": { "type": "exp", "value": 10 },
+    "failDamage": 5
+  },
+  {
+    "id": "explore_ruins",
+    "type": "explore",
+    "descriptions": [
+      "你发现了一座坍塌的帝国哨站遗迹。",
+      "废墟中有战斗的痕迹，弹壳散落一地。",
+      "一面断裂的帝国旗帜在气流中微微飘动。"
+    ],
+    "successReward": { "type": "resource", "resourceType": "minerals", "value": 30 },
+    "failDamage": 8
+  },
+  {
+    "id": "explore_mech",
+    "type": "explore",
+    "descriptions": [
+      "一台损坏的伺服颅骨在角落闪烁，似乎还在运行。",
+      "地面上散落着机械零件，有些还能使用。",
+      "一面墙壁上镶嵌着古老的机械符文。"
+    ],
+    "successReward": { "type": "resource", "resourceType": "tech", "value": 15 },
+    "failDamage": 3
+  },
+  {
+    "id": "encounter_refugees",
+    "type": "encounter",
+    "descriptions": [
+      "你遇到了一群衣衫褴褛的难民，他们向你求救。",
+      "一群矿工躲在掩体后，他们的灯光已经熄灭。"
+    ],
+    "effect": { "type": "heal_hp", "value": 15 }
+  },
+  {
+    "id": "encounter_servoskull",
+    "type": "encounter",
+    "descriptions": [
+      "一台受损的伺服颅骨飞到你面前，投射出全息信息。",
+      "一台伺服颅骨从废墟中升起，传递着加密数据。"
+    ],
+    "effect": { "type": "exp", "value": 15 }
+  },
+  {
+    "id": "encounter_shrine",
+    "type": "encounter",
+    "descriptions": [
+      "一座小型帝皇神龛矗立在走廊拐角，蜡烛还在燃烧。",
+      "墙壁上的帝皇画像前摆着供品。"
+    ],
+    "effect": { "type": "buff", "value": 20 }
+  },
+  {
+    "id": "encounter_mechanic",
+    "type": "encounter",
+    "descriptions": [
+      "一名机仆祭司正在修理一台发电机，他愿意分享一些能量电池。",
+      "一位机械神教的随员提供了他的工具包。"
+    ],
+    "effect": { "type": "heal_mp", "value": 20 }
+  },
+  {
+    "id": "loot_ammo",
+    "type": "loot",
+    "descriptions": [
+      "你在废墟中发现了一个弹药箱。",
+      "角落里的补给箱中还留有一些弹药。"
+    ],
+    "lootType": "resource",
+    "resourceType": "energy",
+    "value": 25
+  },
+  {
+    "id": "loot_relic",
+    "type": "loot",
+    "descriptions": [
+      "一个微弱的光芒从碎片中透出——STC碎片！",
+      "你发现了一块刻有机械符文的金属板。"
+    ],
+    "lootType": "resource",
+    "resourceType": "tech",
+    "value": 50
+  },
+  {
+    "id": "loot_alloys",
+    "type": "loot",
+    "descriptions": [
+      "一堆合金材料散落在地上，虽然有些锈迹但仍可使用。",
+      "一个储物柜里整齐地码放着合金板材。"
+    ],
+    "lootType": "resource",
+    "resourceType": "alloys",
+    "value": 15
+  },
+  {
+    "id": "loot_medkit",
+    "type": "loot",
+    "descriptions": [
+      "你找到了一个帝国的医疗包，里面还有可用的药物。",
+      "急救箱中的注射器还是密封的。"
+    ],
+    "lootType": "item",
+    "itemId": "medKit"
+  },
+  {
+    "id": "loot_weapon",
+    "type": "loot",
+    "descriptions": [
+      "一把链锯剑靠在墙边，锯齿还在微微转动。",
+      "一把爆弹枪挂在倒塌的武器架上。"
+    ],
+    "lootType": "item",
+    "itemIds": ["chainsword", "bolter"]
+  }
+]
