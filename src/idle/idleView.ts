@@ -1,6 +1,8 @@
 import type { GameState, ResourceType } from '../game/gameState.js';
 import { eventBus } from '../game/eventBus.js';
 import { getBuildings, canUpgrade, upgradeBuilding, unlockBuilding, getUpgradeCost, getProductionRate } from './buildings.js';
+import { getBuildingProductionBonus } from '../tech/techEffects.js';
+import { getMilestoneBonuses } from '../player/classes.js';
 import { formatNumber } from '../ui/components.js';
 
 const RESOURCE_KEYS: ResourceType[] = ['minerals', 'energy', 'tech', 'alloys', 'relics'];
@@ -50,11 +52,13 @@ export function renderResources(state: GameState): void {
 
     let rate = 0;
     const buildings = getBuildings();
+    const milestoneBonus = getMilestoneBonuses(state.player.level).productionMultiplier;
     for (const b of buildings) {
       const bs = state.buildings[b.id];
       if (!bs?.unlocked) continue;
       if (b.produces[key]) {
-        rate += (b.produces[key] ?? 0) * bs.level;
+        const techBonus = 1 + getBuildingProductionBonus(b.id, state.techUnlocked);
+        rate += (b.produces[key] ?? 0) * bs.level * techBonus * milestoneBonus;
       }
     }
     if (rateEl) {
