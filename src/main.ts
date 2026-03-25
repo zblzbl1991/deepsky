@@ -311,16 +311,7 @@ async function init() {
       advanceOneEvent(state);
     }, 4000);
   } else if (state.activeExpedition) {
-    // Show result for completed/failed expedition
-    const settlement = settleExpedition(state.activeExpedition);
-    showExpeditionResult(state.activeExpedition, settlement);
-    state.player.exp += settlement.expGained;
-    for (const [type, amount] of Object.entries(settlement.resourcesGained)) {
-      if (amount && amount > 0) {
-        state.addResource(type as 'minerals' | 'energy' | 'tech' | 'alloys' | 'relics', amount);
-      }
-    }
-    state.activeExpedition = undefined;
+    finishExpedition(state);
   }
 
   renderIdleView(state);
