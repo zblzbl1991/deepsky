@@ -189,4 +189,41 @@ describe('GameState', () => {
     expect(state2.activeExpedition!.planetId).toBe('aridia');
     expect(state2.activeExpedition!.player.hp).toBe(50);
   });
+
+  it('addExp increases player exp', () => {
+    const state = createGameState();
+    state.addExp(50);
+    expect(state.player.exp).toBe(50);
+  });
+
+  it('addExp levels up when threshold reached', () => {
+    const state = createGameState();
+    const gained = state.addExp(100);
+    expect(gained).toBe(1);
+    expect(state.player.level).toBe(2);
+    expect(state.player.exp).toBe(0);
+  });
+
+  it('addExp carries over excess exp', () => {
+    const state = createGameState();
+    const gained = state.addExp(150);
+    expect(gained).toBe(1);
+    expect(state.player.level).toBe(2);
+    expect(state.player.exp).toBe(50);
+  });
+
+  it('addExp handles multi-level cascade', () => {
+    const state = createGameState();
+    const gained = state.addExp(400);
+    expect(gained).toBe(2);
+    expect(state.player.level).toBe(3);
+    expect(state.player.exp).toBeCloseTo(17, 0);
+  });
+
+  it('addExp returns 0 when no level up', () => {
+    const state = createGameState();
+    const gained = state.addExp(50);
+    expect(gained).toBe(0);
+    expect(state.player.level).toBe(1);
+  });
 });

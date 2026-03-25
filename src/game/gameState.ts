@@ -1,4 +1,6 @@
 import type { Expedition } from '../expedition/expeditionEngine.js';
+import { levelUpExp, getMilestoneBonuses } from '../player/classes.js';
+import { eventBus } from './eventBus.js';
 
 export type ResourceType = 'minerals' | 'energy' | 'tech' | 'alloys' | 'relics';
 
@@ -93,6 +95,20 @@ export class GameState {
       this.resources[key as ResourceType] -= (val ?? 0);
     }
     return true;
+  }
+
+  addExp(amount: number): number {
+    this.player.exp += amount;
+    let levelsGained = 0;
+    while (this.player.exp >= levelUpExp(this.player.level)) {
+      this.player.exp -= levelUpExp(this.player.level);
+      this.player.level++;
+      levelsGained++;
+    }
+    if (levelsGained > 0) {
+      eventBus.emit('levelUp', this.player.level, getMilestoneBonuses(this.player.level));
+    }
+    return levelsGained;
   }
 
   toSaveData(): SaveData {
