@@ -54,3 +54,26 @@ export function getClasses(): ClassDef[] {
 export function getClassDef(id: string): ClassDef | undefined {
   return classes.find(c => c.id === id);
 }
+
+export interface MilestoneBonuses {
+  productionMultiplier: number;
+  expeditionHpBonus: number;
+  extraBuildingSlots: number;
+}
+
+export function levelUpExp(level: number): number {
+  return Math.round(100 * Math.pow(level, 1.5));
+}
+
+export function getMilestoneBonuses(level: number): MilestoneBonuses {
+  let productionMultiplier = 1.0;
+  let expeditionHpBonus = 0;
+  let extraBuildingSlots = 0;
+
+  if (level >= 5) productionMultiplier *= 1.10;
+  if (level >= 10) expeditionHpBonus = 20;
+  if (level >= 15) extraBuildingSlots = 1;
+  if (level >= 20) productionMultiplier *= 1.15;
+
+  return { productionMultiplier, expeditionHpBonus, extraBuildingSlots };
+}
