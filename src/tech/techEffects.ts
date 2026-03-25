@@ -4,8 +4,9 @@ export function getBuildingProductionBonus(buildingId: string, techUnlocked: str
   let bonus = 0;
   for (const techId of techUnlocked) {
     const def = getTechDef(techId);
-    if (def?.effect?.buildingBonus?.[buildingId]) {
-      bonus += def.effect.buildingBonus[buildingId] as number;
+    const bb = def?.effect?.buildingBonus as Record<string, number> | undefined;
+    if (bb?.[buildingId]) {
+      bonus += bb[buildingId];
     }
   }
   return bonus;
