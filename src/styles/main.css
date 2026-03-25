@@ -887,36 +887,10 @@ section h2 {
 }
 
 /* ============================================================
-   9. DUNGEON VIEW
+   9. EXPEDITION VIEW
    ============================================================ */
-#dungeon-hud {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-3) var(--space-5);
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--blue-50);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-3);
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: var(--tracking-wide);
-  color: var(--text-secondary);
-}
 
-#dungeon-floor {
-  color: var(--text-primary);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wider);
-}
-
-#dungeon-hp { color: var(--red-40); }
-#dungeon-atk { color: var(--gold-60); }
-#dungeon-def { color: var(--blue-50); }
-#dungeon-exp { color: var(--accent-success); }
-
+/* ── HUD ── */
 .hud-divider {
   font-size: var(--text-xs);
   color: var(--blue-50);
@@ -924,148 +898,192 @@ section h2 {
   opacity: 0.6;
 }
 
-/* Dungeon canvas container */
-#dungeon-container {
-  position: relative;
-  background: var(--atmosphere-void);
-  border: 1px solid var(--border);
-  border-top: 2px solid var(--blue-50);
-  border-radius: var(--radius-lg);
-  margin-bottom: var(--space-3);
-  overflow: hidden;
-  animation: dungeon-reveal 500ms var(--ease-out-quart) both;
-
-  /* Top corner accents */
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    z-index: 10;
-    pointer-events: none;
-  }
-  &::before {
-    top: 0;
-    left: 0;
-    border-top: 2px solid var(--blue-40);
-    border-left: 2px solid var(--blue-40);
-    border-radius: var(--radius-lg) 0 0 0;
-  }
-  &::after {
-    top: 0;
-    right: 0;
-    border-top: 2px solid var(--blue-40);
-    border-right: 2px solid var(--blue-40);
-    border-radius: 0 var(--radius-lg) 0 0;
-  }
-}
-
-@keyframes dungeon-reveal {
-  from {
-    opacity: 0;
-    transform: scaleY(0.95) translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: scaleY(1) translateY(0);
-  }
-}
-
-/* Bottom corner pseudo-elements */
-#dungeon-container .corner-br,
-#dungeon-container .corner-bl {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  z-index: 10;
-  pointer-events: none;
-}
-#dungeon-container .corner-br {
-  bottom: 0;
-  right: 0;
-  border-bottom: 2px solid var(--blue-40);
-  border-right: 2px solid var(--blue-40);
-  border-radius: 0 0 var(--radius-lg) 0;
-}
-#dungeon-container .corner-bl {
-  bottom: 0;
-  left: 0;
-  border-bottom: 2px solid var(--blue-40);
-  border-left: 2px solid var(--blue-40);
-  border-radius: 0 0 0 var(--radius-lg);
-}
-
-#dungeon-canvas {
-  display: block;
-  width: 100%;
-  image-rendering: pixelated;
-}
-
-/* Dungeon log */
-#dungeon-log {
-  font-size: var(--text-xs);
-  color: var(--text-dim);
-  max-height: 60px;
-  overflow-y: auto;
-  margin-bottom: var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  border-left: 2px solid var(--border-dim);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  line-height: var(--leading-relaxed);
-  background: var(--atmosphere-deep);
-}
-
-/* D-Pad Controls */
-#dungeon-controls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-}
-
-.control-row {
-  display: flex;
-  gap: var(--space-2);
-}
-
-.move-btn {
-  background: var(--surface-2);
-  color: var(--blue-50);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  width: 52px;
-  height: 52px;
-  font-size: var(--text-lg);
-  cursor: pointer;
+/* ── Expedition Config ── */
+.expedition-config-empty {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition:
-    background var(--duration-fast) var(--ease-out-quart),
-    border-color var(--duration-fast) var(--ease-out-quart),
-    color var(--duration-fast) var(--ease-out-quart);
-
-  &:hover {
-    background: var(--surface-3);
-    border-color: var(--blue-50);
-    color: var(--blue-40);
-  }
-
-  &:active {
-    background: var(--surface-4);
-    color: var(--blue-40);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--blue-40);
-    outline-offset: 2px;
-  }
+  min-height: 200px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
 }
 
-/* Dungeon result */
-#dungeon-result {
+.expedition-config-empty p {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+/* ── Expedition Panel ── */
+#expedition-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-5);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue-50);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+}
+
+#expedition-planet-name {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.expedition-status-active {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--accent-success);
+  border: 1px solid var(--accent-success);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+}
+
+.expedition-status-success {
+  color: var(--gold-60);
+  border-color: var(--gold-60);
+}
+
+.expedition-status-failed {
+  color: var(--red-40);
+  border-color: var(--red-40);
+}
+
+#expedition-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  background: var(--surface-2);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+#expedition-hp-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+#expedition-hp-text {
+  font-variant-numeric: tabular-nums;
+  color: var(--red-40);
+}
+
+.expedition-hp-bar-bg {
+  width: 120px;
+  height: 8px;
+  background: var(--surface-4);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.expedition-hp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4a2, #6c4);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.expedition-hp-bar-fill.medium { background: linear-gradient(90deg, #a4, #c6); }
+.expedition-hp-bar-fill.low { background: linear-gradient(90deg, #c42, #e64); }
+
+/* ── Expedition Log ── */
+#expedition-log {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.expedition-log-entry {
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border-dim);
+  border-left: 3px solid var(--surface-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.expedition-log-entry.combat {
+  border-left-color: var(--red-40);
+}
+
+.expedition-log-entry.loot {
+  border-left-color: var(--gold-60);
+}
+
+.expedition-log-entry.encounter {
+  border-left-color: var(--blue-50);
+}
+
+.expedition-log-entry.explore {
+  border-left-color: var(--text-dim);
+}
+
+.expedition-log-entry.current {
+  border-left-color: var(--accent-success);
+  background: var(--surface-3);
+  color: var(--text-primary);
+}
+
+.expedition-log-entry.pending {
+  opacity: 0.4;
+}
+
+.expedition-log-entry .event-label {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: var(--space-1);
+}
+
+/* ── Expedition Loot ── */
+#expedition-loot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.expedition-loot-item {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  padding: var(--space-1) var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--gold-60);
+  border-radius: var(--radius-sm);
+  color: var(--gold-60);
+}
+
+/* ── Expedition Result ── */
+#expedition-result {
   background: var(--glass-bg);
   backdrop-filter: blur(8px);
   border: 1px solid var(--blue-40);
@@ -1088,6 +1106,92 @@ section h2 {
     color: var(--text-secondary);
     margin-bottom: var(--space-3);
     line-height: var(--leading-relaxed);
+  }
+}
+
+/* ── Expedition Config Modal ── */
+.expedition-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: oklch(0% 0 0 / 0.5);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.expedition-modal {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  min-width: 360px;
+  max-width: 480px;
+  box-shadow: var(--shadow-lg);
+}
+
+.expedition-modal h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.expedition-modal .planet-info {
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  margin-bottom: var(--space-5);
+  line-height: var(--leading-relaxed);
+}
+
+.difficulty-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.difficulty-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  transition:
+    background var(--duration-fast) var(--ease-out-quart),
+    border-color var(--duration-fast) var(--ease-out-quart);
+
+  &:hover {
+    background: var(--surface-3);
+    border-color: var(--border);
+  }
+
+  &.difficulty-low { border-left: 3px solid var(--accent-success); }
+  &.difficulty-mid { border-left: 3px solid var(--gold-60); }
+  &.difficulty-high { border-left: 3px solid var(--red-40); }
+
+  .diff-label {
+    font-weight: 700;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+  }
+
+  .diff-info {
+    font-size: var(--text-xs);
+    color: var(--text-dim);
   }
 }
 
@@ -1488,8 +1592,15 @@ section h2 {
 .log-entry.system { color: var(--blue-30); font-style: italic; }
 .log-entry.player-action { color: oklch(85% 0.04 250); }
 
-#dungeon-explore { display: block; }
-#dungeon-explore.hidden { display: none; }
+/* Battle log — read-only for expedition auto-battle */
+.battle-log-only {
+  background: var(--atmosphere-ink);
+  border: 1px solid var(--red-50);
+  border-left: 3px solid var(--red-40);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-3);
+}
 
 /* ============================================================
    12. REDUCED MOTION
@@ -1598,15 +1709,10 @@ section h2 {
     margin-top: var(--space-2);
   }
 
-  #dungeon-hud {
+  #expedition-stats {
     flex-wrap: wrap;
     gap: var(--space-2);
     font-size: var(--text-xs);
-  }
-
-  .move-btn {
-    width: 44px;
-    height: 44px;
   }
 
   .building-card,

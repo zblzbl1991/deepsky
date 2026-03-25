@@ -155,4 +155,38 @@ describe('GameState', () => {
     const state = createGameState();
     expect(state.shipsBuilt).toEqual([]);
   });
+
+  it('activeExpedition defaults to undefined', () => {
+    const state = createGameState();
+    expect(state.activeExpedition).toBeUndefined();
+  });
+
+  it('serializes activeExpedition', () => {
+    const state = createGameState();
+    const save = state.toSaveData();
+    expect(save.activeExpedition).toBeUndefined();
+  });
+
+  it('restores activeExpedition from save data', () => {
+    const state1 = createGameState();
+    const save = state1.toSaveData();
+    save.activeExpedition = {
+      id: 'exp_test',
+      planetId: 'aridia',
+      difficulty: 1,
+      status: 'active',
+      currentEventIndex: 3,
+      events: [],
+      player: { hp: 50, maxHp: 100, mp: 30, maxMp: 50, attack: 15, defense: 5, classId: 'spaceMarine' },
+      loot: [],
+      expGained: 30,
+      resourcesGained: { minerals: 20 },
+      startTime: Date.now(),
+    };
+    const state2 = createGameState();
+    state2.fromSaveData(save);
+    expect(state2.activeExpedition).toBeDefined();
+    expect(state2.activeExpedition!.planetId).toBe('aridia');
+    expect(state2.activeExpedition!.player.hp).toBe(50);
+  });
 });

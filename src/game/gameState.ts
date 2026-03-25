@@ -1,3 +1,5 @@
+import type { Expedition } from '../expedition/expeditionEngine.js';
+
 export type ResourceType = 'minerals' | 'energy' | 'tech' | 'alloys' | 'relics';
 
 export interface Resources {
@@ -34,6 +36,7 @@ export interface SaveData {
     deepestDungeon: number;
     relicsFound: number;
   };
+  activeExpedition?: Expedition;
 }
 
 const DEFAULT_SAVE_VERSION = '0.1.0';
@@ -59,6 +62,7 @@ export class GameState {
   shipsBuilt: string[] = [];
   statistics: SaveData['statistics'];
   lastTickTime: number;
+  activeExpedition?: Expedition;
 
   constructor() {
     this.resources = defaultResources();
@@ -102,6 +106,7 @@ export class GameState {
       techUnlocked: [...this.techUnlocked],
       shipsBuilt: [...this.shipsBuilt],
       statistics: { ...this.statistics },
+      activeExpedition: this.activeExpedition,
     };
   }
 
@@ -114,6 +119,7 @@ export class GameState {
     this.shipsBuilt = [...data.shipsBuilt];
     this.statistics = { ...data.statistics };
     this.lastTickTime = Date.now();
+    this.activeExpedition = data.activeExpedition;
   }
 }
 
