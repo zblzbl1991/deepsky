@@ -1,4 +1,5 @@
 import type { GameState, ResourceType } from '../game/gameState.js';
+import { eventBus } from '../game/eventBus.js';
 import { getBuildings, canUpgrade, upgradeBuilding, unlockBuilding, getUpgradeCost, getProductionRate } from './buildings.js';
 import { formatNumber } from '../ui/components.js';
 
@@ -127,4 +128,20 @@ export function renderBuildings(state: GameState): void {
 
     container.appendChild(card);
   }
+}
+
+export function initLevelUpListener(): void {
+  eventBus.on('levelUp', (...args: unknown[]) => {
+    const newLevel = args[0] as number;
+    const milestone = args[1] as { productionMultiplier: number; expeditionHpBonus: number; extraBuildingSlots: number };
+    const toast = document.createElement('div');
+    toast.className = 'level-up-toast';
+    let msg = `等级提升至 ${newLevel} 级！`;
+    if (milestone.productionMultiplier > 1.0) msg += ' 产量提升！';
+    if (milestone.expeditionHpBonus > 0) msg += ' 远征HP提升！';
+    if (milestone.extraBuildingSlots > 0) msg += ' 解锁新建筑槽位！';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  });
 }

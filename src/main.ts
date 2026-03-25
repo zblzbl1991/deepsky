@@ -2,7 +2,7 @@ import { createGameState, type GameState } from './game/gameState.js';
 import { GameLoop } from './game/gameLoop.js';
 import { SaveManager } from './game/saveManager.js';
 import { createUIManager } from './ui/uiManager.js';
-import { renderIdleView, renderResources } from './idle/idleView.js';
+import { renderIdleView, renderResources, initLevelUpListener } from './idle/idleView.js';
 import { renderStarMapView } from './starmap/starMapView.js';
 import { getPlanetDef } from './starmap/planets.js';
 import { createExpedition, advanceExpedition, settleExpedition, type Expedition } from './expedition/expeditionEngine.js';
@@ -277,6 +277,7 @@ async function init() {
   }
 
   renderIdleView(state);
+  initLevelUpListener();
   gameLoop.start();
 
   setInterval(() => renderResources(state), 1000);
