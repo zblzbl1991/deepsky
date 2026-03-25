@@ -159,3 +159,63 @@ export function getSkillDef(classId: string, skillId: string): SkillDef | undefi
   const skills = CLASS_SKILLS[classId];
   return skills?.find((s) => s.id === skillId);
 }
+
+export function autoSelectSkill(
+  classId: string,
+  playerMp: number,
+  playerHp: number,
+  playerMaxHp: number,
+  enemyHp: number,
+  enemyMaxHp: number,
+  cooldowns: Record<string, number>,
+): SkillDef | null {
+  const skills = getSkillsForClass(classId);
+  const available = skills.filter(s =>
+    s.mpCost <= playerMp && (cooldowns[s.id] || 0) <= 0
+  );
+  if (available.length === 0) return null;
+
+  // Priority 1: Execute skill if enemy HP < threshold
+  const executeSkill = available.find(s =>
+    s.effect.type === 'execute' && (enemyHp / enemyMaxHp) < (s.effect.threshold / 100)
+  );
+  if (executeSkill) return executeSkill;
+
+  // Priority 2: Heal/defense if player HP < 40%
+  if (playerHp / playerMaxHp < 0.4) {
+    const healSkill = available.find(s => s.effect.type === 'heal');
+    if (healSkill) return healSkill;
+    const defenseSkill = available.find(s =>
+      s.effect.type === 'buff' && s.effect.buffType === 'defense_half'
+    );
+    if (defenseSkill) return defenseSkill;
+  }
+
+  // Priority 3: MP restore if MP is low
+  if (playerMp < 20) {
+    const mpSkill = available.find(s => s.effect.type === 'mp_restore');
+    if (mpSkill) return mpSkill;
+  }
+
+  // Priority 4: Highest damage skill
+  const getMultiplier = (s: SkillDef): number => {
+    if (s.effect.type === 'damage') return s.effect.multiplier;
+    if (s.effect.type === 'execute') return s.effect.multiplier;
+    return 0;
+  };
+  const damageSkills = available.filter(s => getMultiplier(s) > 0);
+  if (damageSkills.length > 0) {
+    damageSkills.sort((a, b) => getMultiplier(b) - getMultiplier(a));
+    return damageSkills[0];
+  }
+
+  // Priority 5: Buff skills
+  const buffSkill = available.find(s => s.effect.type === 'buff');
+  if (buffSkill) return buffSkill;
+
+  // Fallback: immunity
+  const immunitySkill = available.find(s => s.effect.type === 'immunity');
+  if (immunitySkill) return immunitySkill;
+
+  return null;
+}

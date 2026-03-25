@@ -1,22 +1,22 @@
 [
   {
     "id": "frigate",
-    "name": "Imperial Frigate",
-    "description": "A swift patrol vessel. Enough for short-range warp jumps.",
+    "name": "帝国轻型护卫舰",
+    "description": "快速巡逻舰。足以进行短程亚空间跳跃。",
     "cost": { "minerals": 500, "alloys": 100 },
     "range": 2
   },
   {
     "id": "cruiser",
-    "name": "Lunar Cruiser",
-    "description": "A warship of the line. Carries enough firepower for dangerous sectors.",
+    "name": "月级巡洋舰",
+    "description": "主力战舰。携带足够火力，足以应对危险的星域。",
     "cost": { "minerals": 2000, "alloys": 500, "energy": 200 },
     "range": 3
   },
   {
     "id": "battleBarge",
-    "name": "Strike Cruiser",
-    "description": "A Space Marine battle barge. The Emperor's fury made manifest.",
+    "name": "打击巡洋舰",
+    "description": "星际战士主力舰。帝皇之怒的具现。",
     "cost": { "minerals": 5000, "alloys": 1500, "tech": 500, "relics": 3 },
     "range": 5
   }

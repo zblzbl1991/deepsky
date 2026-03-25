@@ -3,6 +3,14 @@ import { getPlanets, isPlanetUnlocked } from './planets.js';
 import { getShips, canBuildShip, buildShip } from './ships.js';
 import { formatNumber } from '../ui/components.js';
 
+const RESOURCE_NAMES: Record<string, string> = {
+  minerals: '矿藏',
+  energy: '能源',
+  tech: '科技',
+  alloys: '合金',
+  relics: '圣物',
+};
+
 export function renderStarMapView(state: GameState, onPlanetSelect: (planetId: string) => void): void {
   renderShips(state, onPlanetSelect);
   renderPlanets(state, onPlanetSelect);
@@ -19,19 +27,21 @@ function renderShips(state: GameState, onPlanetSelect: (planetId: string) => voi
     const canBuild = canBuildShip(state, ship.id);
     const card = document.createElement('div');
     card.className = `ship-card${isBuilt ? ' built' : ''}`;
-    const costStr = Object.entries(ship.cost).map(([k, v]) => `${k}: ${formatNumber(v)}`).join(', ');
+    const costStr = Object.entries(ship.cost).map(([k, v]) => `${RESOURCE_NAMES[k] ?? k} ${formatNumber(v)}`).join(' · ');
 
     card.innerHTML = `
       <div class="ship-name">${ship.name}</div>
       <div class="ship-desc">${ship.description}</div>
-      <div class="ship-cost">${isBuilt ? 'RANGE: ' + ship.range + ' sectors' : 'Cost: ' + costStr}</div>
-      <div class="ship-status ${isBuilt ? 'built' : 'locked'}">${isBuilt ? 'COMMISSIONED' : 'NOT BUILT'}</div>
+      <div class="ship-meta">
+        <span class="ship-cost">${isBuilt ? '航程: ' + ship.range + ' 星域' : '费用: ' + costStr}</span>
+        <span class="ship-status ${isBuilt ? 'built' : 'locked'}">${isBuilt ? '已服役' : '未建造'}</span>
+      </div>
     `;
 
     if (!isBuilt) {
       const btn = document.createElement('button');
       btn.className = 'upgrade-btn';
-      btn.textContent = 'CONSTRUCT';
+      btn.textContent = '建造';
       btn.disabled = !canBuild;
       btn.addEventListener('click', () => {
         buildShip(state, ship.id);
@@ -54,16 +64,19 @@ function renderPlanets(state: GameState, onPlanetSelect: (planetId: string) => v
     const canAffordEnergy = state.resources.energy >= planet.energyCost;
     const card = document.createElement('div');
     card.className = `planet-card${!unlocked ? ' locked' : ''}`;
+    card.dataset.danger = String(planet.dangerLevel);
 
-    const rewardStr = Object.entries(planet.rewards).map(([k, v]) => `${k}: +${v}`).join(', ');
+    const rewardStr = Object.entries(planet.rewards).map(([k, v]) => `${RESOURCE_NAMES[k] ?? k} +${v}`).join(' · ');
     card.innerHTML = `
       <div class="planet-header">
         <span class="planet-name">${planet.name}</span>
-        <span class="planet-danger">DANGER ${'▓'.repeat(planet.dangerLevel)}${'░'.repeat(5 - planet.dangerLevel)}</span>
+        <span class="planet-danger">危险 ${planet.dangerLevel}</span>
       </div>
       <div class="planet-desc">${planet.description}</div>
       <div class="planet-info">
-        Energy: ${formatNumber(planet.energyCost)} | Floors: ${planet.dungeonFloors} | Rewards: ${rewardStr}
+        <span>能量: ${formatNumber(planet.energyCost)}</span>
+        <span>深度: ${planet.dungeonFloors}</span>
+        <span>${rewardStr}</span>
       </div>
     `;
 

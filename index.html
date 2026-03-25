@@ -8,119 +8,190 @@
 </head>
 <body>
   <div id="app">
-    <div id="save-indicator">Saved</div>
-    <div id="view-idle" class="view active">
-      <header id="header">
-        <h1>IMPERIAL OUTPOST</h1>
-        <nav id="nav">
-          <button class="nav-btn active" data-view="idle">Base</button>
-          <button class="nav-btn" data-view="starmap">Star Map</button>
-          <button class="nav-btn" data-view="dungeon">Expedition</button>
-        </nav>
-      </header>
+    <div id="save-indicator">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>已保存</span>
+    </div>
 
+    <!-- ── Sidebar Navigation ── -->
+    <aside id="sidebar">
+      <div class="sidebar-brand">
+        <svg class="brand-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/>
+        </svg>
+        <span>DEEP SKY</span>
+      </div>
+      <nav id="nav">
+        <button class="nav-btn active" data-view="idle">基地</button>
+        <button class="nav-btn" data-view="starmap">星图</button>
+        <button class="nav-btn" data-view="dungeon">远征</button>
+      </nav>
+      <div class="sidebar-footer">
+        <span>轨道空间站</span>
+        <span class="sidebar-footer-dim">太阳界域</span>
+      </div>
+    </aside>
+
+    <!-- ── Main Content ── -->
+    <div id="content">
+      <div id="content-header">
+        <h1 id="view-title">帝国哨站</h1>
+      </div>
+
+    <!-- ── Idle / Base View ── -->
+    <div id="view-idle" class="view active">
       <section id="resource-panel">
-        <div class="resource-row" data-resource="minerals">
-          <span class="resource-icon">&#9935;</span>
-          <span class="resource-name">Minerals</span>
-          <span class="resource-value" id="res-minerals">0</span>
-          <span class="resource-rate" id="rate-minerals">+0/s</span>
+        <!-- Primary resources — Imperial twin pillars -->
+        <div class="resource-tier resource-tier--primary">
+          <div class="resource-row" data-resource="minerals">
+            <span class="resource-icon">&#9935;</span>
+            <div class="resource-info">
+              <div class="resource-name">矿藏</div>
+              <div class="resource-value" id="res-minerals">0</div>
+              <div class="resource-rate" id="rate-minerals">+0/s</div>
+            </div>
+            <div class="resource-bar"><div class="resource-bar-fill" id="bar-minerals"></div></div>
+          </div>
+          <div class="resource-row" data-resource="energy">
+            <span class="resource-icon">&#9889;</span>
+            <div class="resource-info">
+              <div class="resource-name">能源</div>
+              <div class="resource-value" id="res-energy">0</div>
+              <div class="resource-rate" id="rate-energy">+0/s</div>
+            </div>
+            <div class="resource-bar"><div class="resource-bar-fill" id="bar-energy"></div></div>
+          </div>
         </div>
-        <div class="resource-row" data-resource="energy">
-          <span class="resource-icon">&#9889;</span>
-          <span class="resource-name">Energy</span>
-          <span class="resource-value" id="res-energy">0</span>
-          <span class="resource-rate" id="rate-energy">+0/s</span>
-        </div>
-        <div class="resource-row" data-resource="tech">
-          <span class="resource-icon">&#128220;</span>
-          <span class="resource-name">Tech</span>
-          <span class="resource-value" id="res-tech">0</span>
-          <span class="resource-rate" id="rate-tech">+0/s</span>
-        </div>
-        <div class="resource-row" data-resource="alloys">
-          <span class="resource-icon">&#9881;</span>
-          <span class="resource-name">Alloys</span>
-          <span class="resource-value" id="res-alloys">0</span>
-          <span class="resource-rate" id="rate-alloys">+0/s</span>
-        </div>
-        <div class="resource-row" data-resource="relics">
-          <span class="resource-icon">&#128065;</span>
-          <span class="resource-name">Relics</span>
-          <span class="resource-value" id="res-relics">0</span>
+
+        <!-- Secondary resources — strategic reserves -->
+        <div class="resource-tier resource-tier--secondary">
+          <div class="resource-row" data-resource="tech">
+            <span class="resource-icon">&#128220;</span>
+            <div class="resource-info">
+              <div class="resource-name">科技</div>
+              <div class="resource-value" id="res-tech">0</div>
+              <div class="resource-rate" id="rate-tech">+0/s</div>
+            </div>
+          </div>
+          <div class="resource-row" data-resource="alloys">
+            <span class="resource-icon">&#9881;</span>
+            <div class="resource-info">
+              <div class="resource-name">合金</div>
+              <div class="resource-value" id="res-alloys">0</div>
+              <div class="resource-rate" id="rate-alloys">+0/s</div>
+            </div>
+          </div>
+          <div class="resource-row" data-resource="relics">
+            <span class="resource-icon">&#128065;</span>
+            <div class="resource-info">
+              <div class="resource-name">圣物</div>
+              <div class="resource-value" id="res-relics">0</div>
+            </div>
+          </div>
         </div>
       </section>
 
       <section id="building-panel">
-        <h2>FACILITIES</h2>
-        <div id="building-list"></div>
+        <h2>设施</h2>
+        <div id="building-list" class="stagger-enter"></div>
       </section>
     </div>
-    <div id="view-starmap" class="view">
-      <header id="header">
-        <h1>STAR MAP</h1>
-        <nav id="nav">
-          <button class="nav-btn" data-view="idle">Base</button>
-          <button class="nav-btn active" data-view="starmap">Star Map</button>
-          <button class="nav-btn" data-view="dungeon">Expedition</button>
-        </nav>
-      </header>
 
+    <!-- ── Star Map View ── -->
+    <div id="view-starmap" class="view">
       <section id="shipyard-panel">
-        <h2>SHIPYARD</h2>
-        <div id="ship-list"></div>
+        <h2>船坞</h2>
+        <div id="ship-list" class="stagger-enter"></div>
       </section>
 
       <section id="planet-list-panel">
-        <h2>SECTORS</h2>
-        <div id="planet-list"></div>
+        <h2>星域</h2>
+        <div id="planet-list" class="stagger-enter"></div>
       </section>
     </div>
+
+    <!-- ── Expedition View ── -->
     <div id="view-dungeon" class="view">
-      <header id="header">
-        <h1>EXPEDITION</h1>
-        <nav id="nav">
-          <button class="nav-btn" data-view="idle">Base</button>
-          <button class="nav-btn" data-view="starmap">Star Map</button>
-          <button class="nav-btn active" data-view="dungeon">Expedition</button>
-        </nav>
-      </header>
-
-      <div id="dungeon-hud">
-        <span id="dungeon-floor">Floor 1</span>
-        <span id="dungeon-hp">HP: 100/100</span>
-        <span id="dungeon-atk">ATK: 10</span>
-        <span id="dungeon-def">DEF: 3</span>
-        <span id="dungeon-exp">EXP: 0</span>
-      </div>
-
-      <div id="dungeon-container">
-        <canvas id="dungeon-canvas"></canvas>
-      </div>
-
-      <div id="combat-panel" style="display:none">
-        <div id="combat-info"></div>
-        <div id="combat-log"></div>
-        <div id="combat-actions">
-          <button class="combat-btn" id="btn-attack">ATTACK</button>
-          <button class="combat-btn" id="btn-flee">FLEE</button>
+      <!-- 远征配置面板（无远征时显示） -->
+      <div id="expedition-config">
+        <div class="expedition-config-empty">
+          <p>在星图中选择一颗已探索的星球发起远征。</p>
         </div>
       </div>
 
-      <div id="dungeon-log"></div>
-
-      <div id="dungeon-controls">
-        <div class="control-row"><button class="move-btn" data-dir="up">&#9650;</button></div>
-        <div class="control-row">
-          <button class="move-btn" data-dir="left">&#9664;</button>
-          <button class="move-btn" data-dir="wait">&#9632;</button>
-          <button class="move-btn" data-dir="right">&#9654;</button>
+      <!-- 远征进行中面板 -->
+      <div id="expedition-panel" style="display:none">
+        <div id="expedition-header">
+          <span id="expedition-planet-name">—</span>
+          <span id="expedition-status" class="expedition-status-active">进行中</span>
         </div>
-        <div class="control-row"><button class="move-btn" data-dir="down">&#9660;</button></div>
+        <div id="expedition-stats">
+          <span id="expedition-difficulty">难度：低</span>
+          <span class="hud-divider" aria-hidden="true">◆</span>
+          <span id="expedition-progress">进度：0/8</span>
+          <span class="hud-divider" aria-hidden="true">◆</span>
+          <span id="expedition-hp-bar-wrap">
+            <span id="expedition-hp-text">HP 100/100</span>
+            <div class="expedition-hp-bar-bg"><div class="expedition-hp-bar-fill" id="expedition-hp-bar"></div></div>
+          </span>
+        </div>
+        <div id="expedition-log"></div>
+        <div id="expedition-loot"></div>
       </div>
 
-      <div id="dungeon-result" style="display:none"></div>
+      <!-- 自动战斗面板 -->
+      <div id="expedition-battle" style="display:none">
+        <div class="battle-header">
+          <span class="battle-title">⚔ 遭遇战斗</span>
+          <span class="floor-indicator" id="exp-battle-event">第 1/8 个事件</span>
+        </div>
+        <div class="battle-arena">
+          <div class="combatant enemy">
+            <div class="sprite-box" id="exp-enemy-sprite">👹</div>
+            <div class="combatant-info">
+              <div class="combatant-name" id="exp-enemy-name">敌人名称</div>
+              <div class="stat-bar">
+                <span class="stat-label">HP</span>
+                <div class="stat-bar-bg">
+                  <div class="stat-bar-fill hp" id="exp-enemy-hp-bar" style="width:100%"></div>
+                </div>
+                <span class="stat-value" id="exp-enemy-hp-text">100/100</span>
+              </div>
+            </div>
+          </div>
+          <div class="combatant player">
+            <div class="sprite-box" id="exp-player-sprite">⚔</div>
+            <div class="combatant-info">
+              <div class="combatant-name" id="exp-player-name">星际战士</div>
+              <div class="stat-bar">
+                <span class="stat-label">HP</span>
+                <div class="stat-bar-bg">
+                  <div class="stat-bar-fill hp" id="exp-player-hp-bar" style="width:100%"></div>
+                </div>
+                <span class="stat-value" id="exp-player-hp-text">100/100</span>
+              </div>
+              <div class="stat-bar">
+                <span class="stat-label">MP</span>
+                <div class="stat-bar-bg mp">
+                  <div class="stat-bar-fill mp" id="exp-player-mp-bar" style="width:100%"></div>
+                </div>
+                <span class="stat-value" id="exp-player-mp-text">50/50</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="battle-log-only">
+          <div class="panel-title">▸ 战斗记录</div>
+          <div class="log-entries" id="exp-battle-log"></div>
+        </div>
+      </div>
+
+      <!-- 远征结算面板 -->
+      <div id="expedition-result" style="display:none"></div>
     </div>
+    </div><!-- /content -->
   </div>
   <script type="module" src="/src/main.ts"></script>
 </body>

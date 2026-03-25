@@ -4,16 +4,48 @@ import { formatNumber } from '../ui/components.js';
 
 const RESOURCE_KEYS: ResourceType[] = ['minerals', 'energy', 'tech', 'alloys', 'relics'];
 
+const RESOURCE_NAMES: Record<string, string> = {
+  minerals: '矿藏',
+  energy: '能源',
+  tech: '科技',
+  alloys: '合金',
+  relics: '圣物',
+};
+
+function toRoman(n: number): string {
+  const romanMap: [number, string][] = [
+    [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I'],
+  ];
+  let result = '';
+  for (const [value, numeral] of romanMap) {
+    while (n >= value) {
+      result += numeral;
+      n -= value;
+    }
+  }
+  return result || 'I';
+}
+
 export function renderIdleView(state: GameState): void {
   renderResources(state);
   renderBuildings(state);
 }
 
-function renderResources(state: GameState): void {
+/** Called every tick — only updates resource values, no DOM rebuild */
+export function renderResources(state: GameState): void {
   for (const key of RESOURCE_KEYS) {
     const valueEl = document.getElementById(`res-${key}`);
     const rateEl = document.getElementById(`rate-${key}`);
-    if (valueEl) valueEl.textContent = formatNumber(state.resources[key]);
+    if (valueEl) {
+      const newValue = formatNumber(state.resources[key]);
+      if (valueEl.textContent !== newValue) {
+        valueEl.textContent = newValue;
+        valueEl.classList.remove('updated');
+        // Trigger reflow then add animation class
+        void valueEl.offsetWidth;
+        valueEl.classList.add('updated');
+      }
+    }
 
     let rate = 0;
     const buildings = getBuildings();
@@ -30,7 +62,8 @@ function renderResources(state: GameState): void {
   }
 }
 
-function renderBuildings(state: GameState): void {
+/** Called on user action — rebuilds building cards */
+export function renderBuildings(state: GameState): void {
   const container = document.getElementById('building-list');
   if (!container) return;
 
@@ -49,26 +82,38 @@ function renderBuildings(state: GameState): void {
     card.className = `building-card${!isUnlocked ? ' locked' : ''}`;
 
     const costStr = Object.entries(cost)
-      .map(([k, v]) => `${k}: ${formatNumber(v ?? 0)}`)
-      .join(', ');
+      .map(([k, v]) => `${RESOURCE_NAMES[k] ?? k} ${formatNumber(v ?? 0)}`)
+      .join(' · ');
 
     const prodStr = Object.entries(building.produces)
-      .map(([k, v]) => `${k}: +${((v ?? 0) * (isUnlocked ? level : 1)).toFixed(1)}/s`)
-      .join(', ');
+      .map(([k, v]) => `${RESOURCE_NAMES[k] ?? k} +${((v ?? 0) * (isUnlocked ? level : 1)).toFixed(1)}/s`)
+      .join(' · ');
 
     card.innerHTML = `
       <div class="building-header">
         <span class="building-name">${building.name}</span>
-        <span class="building-level">${isUnlocked ? `Lv.${level}` : 'LOCKED'}</span>
+        <span class="building-level">${isUnlocked ? toRoman(level) : '未解锁'}</span>
       </div>
-      <div class="building-desc">${building.description}</div>
-      ${isUnlocked ? `<div class="building-production">Produces: ${prodStr}</div>` : ''}
-      <div class="building-cost">${isUnlocked ? 'Upgrade' : 'Build'}: ${costStr}</div>
+      <div class="building-body">
+        ${isUnlocked ? `
+          <div class="building-stat-row building-output">
+            <span class="stat-label">产出</span>
+            <span class="stat-value building-production">${prodStr}</span>
+          </div>
+        ` : ''}
+        <div class="building-stat-row building-cost-row">
+          <span class="stat-label">${isUnlocked ? '升级' : '建造'}</span>
+          <span class="stat-value building-cost">${costStr}</span>
+        </div>
+        <div class="building-desc">${building.description}</div>
+      </div>
+      <div class="building-actions"></div>
     `;
 
+    const actionsDiv = card.querySelector('.building-actions')!;
     const btn = document.createElement('button');
     btn.className = 'upgrade-btn';
-    btn.textContent = isUnlocked ? 'UPGRADE' : 'CONSTRUCT';
+    btn.textContent = isUnlocked ? '升级' : '建造';
     btn.disabled = !canAfford;
     btn.addEventListener('click', () => {
       if (isUnlocked) {
@@ -78,7 +123,7 @@ function renderBuildings(state: GameState): void {
       }
       renderIdleView(state);
     });
-    card.appendChild(btn);
+    actionsDiv.appendChild(btn);
 
     container.appendChild(card);
   }

@@ -1,8 +1,8 @@
 [
   {
     "id": "mine",
-    "name": "Mining Shaft",
-    "description": "Delve into the crust. For the Emperor needs these resources.",
+    "name": "采矿竖井",
+    "description": "深入地壳开采资源。为了帝皇，我们必须获取这些资源。",
     "baseCost": { "minerals": 50 },
     "costMultiplier": 1.8,
     "produces": { "minerals": 2 },
@@ -10,8 +10,8 @@
   },
   {
     "id": "powerPlant",
-    "name": "Plasma Generator",
-    "description": "Harness the power of the stars to fuel our endeavors.",
+    "name": "等离子发电机",
+    "description": "汲取星辰之力，为我们的伟业提供能源。",
     "baseCost": { "minerals": 80 },
     "costMultiplier": 1.8,
     "produces": { "energy": 1.5 },
@@ -19,8 +19,8 @@
   },
   {
     "id": "researchLab",
-    "name": "Divination Chamber",
-    "description": "Tech-Priests parse STC fragments to unlock ancient knowledge.",
+    "name": "占卜密室",
+    "description": "机械修会解析STC碎片，解锁古老知识。",
     "baseCost": { "minerals": 150, "energy": 50 },
     "costMultiplier": 2.0,
     "produces": { "tech": 0.5 },
@@ -28,8 +28,8 @@
   },
   {
     "id": "refinery",
-    "name": "Alloy Forge",
-    "description": "Transmute base minerals into refined alloys worthy of the Imperium.",
+    "name": "精炼熔炉",
+    "description": "将基础矿物转化为配得上帝国的精炼合金。",
     "baseCost": { "minerals": 300, "energy": 100 },
     "costMultiplier": 2.2,
     "produces": { "alloys": 0.3 },

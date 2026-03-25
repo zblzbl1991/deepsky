@@ -62,4 +62,131 @@ describe('GameState', () => {
     restored.fromSaveData(save);
     expect(restored.resources.minerals).toBe(500);
   });
+
+  it('canAfford returns true when resources are sufficient', () => {
+    const state = createGameState();
+    state.addResource('minerals', 100);
+    state.addResource('energy', 50);
+    expect(state.canAfford({ minerals: 50, energy: 25 })).toBe(true);
+  });
+
+  it('canAfford returns false when resources are insufficient', () => {
+    const state = createGameState();
+    state.addResource('minerals', 30);
+    expect(state.canAfford({ minerals: 50 })).toBe(false);
+  });
+
+  it('canAfford returns true for zero cost', () => {
+    const state = createGameState();
+    expect(state.canAfford({ minerals: 0 })).toBe(true);
+  });
+
+  it('spendResources deducts multiple resources atomically', () => {
+    const state = createGameState();
+    state.addResource('minerals', 100);
+    state.addResource('energy', 50);
+    const result = state.spendResources({ minerals: 30, energy: 20 });
+    expect(result).toBe(true);
+    expect(state.resources.minerals).toBe(70);
+    expect(state.resources.energy).toBe(30);
+  });
+
+  it('spendResources fails atomically when insufficient resources', () => {
+    const state = createGameState();
+    state.addResource('minerals', 30);
+    state.addResource('energy', 50);
+    const result = state.spendResources({ minerals: 50, energy: 20 });
+    expect(result).toBe(false);
+    // Neither resource should be deducted
+    expect(state.resources.minerals).toBe(30);
+    expect(state.resources.energy).toBe(50);
+  });
+
+  it('toSaveData creates deep copy to prevent mutation', () => {
+    const state = createGameState();
+    state.addResource('minerals', 500);
+    const save = state.toSaveData();
+    save.resources.minerals = 999;
+    // Original state should be unaffected
+    expect(state.resources.minerals).toBe(500);
+  });
+
+  it('fromSaveData creates deep copy to prevent mutation', () => {
+    const state1 = createGameState();
+    state1.addResource('minerals', 500);
+
+    const state2 = createGameState();
+    const save = state1.toSaveData();
+    state2.fromSaveData(save);
+
+    // Mutate the saved data
+    save.resources.minerals = 999;
+
+    // state2 should be unaffected
+    expect(state2.resources.minerals).toBe(500);
+  });
+
+  it('serializes with version string', () => {
+    const state = createGameState();
+    const save = state.toSaveData();
+    expect(save.version).toBe('0.1.0');
+  });
+
+  it('serializes player equipment as copy', () => {
+    const state = createGameState();
+    state.player.equipment.push('bolter');
+    const save = state.toSaveData();
+    state.player.equipment.push('chainsword');
+    // Save should not be affected
+    expect(save.player.equipment).toEqual(['bolter']);
+  });
+
+  it('initializes exploredPlanets as empty array', () => {
+    const state = createGameState();
+    expect(state.exploredPlanets).toEqual([]);
+  });
+
+  it('initializes techUnlocked as empty array', () => {
+    const state = createGameState();
+    expect(state.techUnlocked).toEqual([]);
+  });
+
+  it('initializes shipsBuilt as empty array', () => {
+    const state = createGameState();
+    expect(state.shipsBuilt).toEqual([]);
+  });
+
+  it('activeExpedition defaults to undefined', () => {
+    const state = createGameState();
+    expect(state.activeExpedition).toBeUndefined();
+  });
+
+  it('serializes activeExpedition', () => {
+    const state = createGameState();
+    const save = state.toSaveData();
+    expect(save.activeExpedition).toBeUndefined();
+  });
+
+  it('restores activeExpedition from save data', () => {
+    const state1 = createGameState();
+    const save = state1.toSaveData();
+    save.activeExpedition = {
+      id: 'exp_test',
+      planetId: 'aridia',
+      difficulty: 1,
+      status: 'active',
+      currentEventIndex: 3,
+      events: [],
+      player: { hp: 50, maxHp: 100, mp: 30, maxMp: 50, attack: 15, defense: 5, classId: 'spaceMarine' },
+      loot: [],
+      expGained: 30,
+      resourcesGained: { minerals: 20 },
+      startTime: Date.now(),
+    };
+    const state2 = createGameState();
+    state2.fromSaveData(save);
+    expect(state2.activeExpedition).toBeDefined();
+    expect(state2.activeExpedition!.planetId).toBe('aridia');
+    expect(state2.activeExpedition!.player.hp).toBe(50);
+  });
 });
