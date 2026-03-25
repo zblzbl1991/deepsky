@@ -9,7 +9,12 @@
     "energyCost": 50,
     "rewards": { "minerals": 500, "tech": 20 },
     "requiredShip": null,
-    "dungeonFloors": 3
+    "dungeonFloors": 3,
+    "firstReward": {
+      "resources": { "minerals": 1500, "tech": 60 },
+      "itemId": "aridiaDataCore",
+      "itemName": "阿里迪亚数据核心"
+    }
   },
   {
     "id": "hiveTartarus",
@@ -21,7 +26,12 @@
     "energyCost": 150,
     "rewards": { "tech": 200, "alloys": 50 },
     "requiredShip": "frigate",
-    "dungeonFloors": 5
+    "dungeonFloors": 5,
+    "firstReward": {
+      "resources": { "tech": 600, "alloys": 150 },
+      "itemId": "hiveCensusData",
+      "itemName": "蜂巢人口普查数据"
+    }
   },
   {
     "id": "carnagedd",
@@ -33,7 +43,12 @@
     "energyCost": 300,
     "rewards": { "relics": 2, "tech": 100 },
     "requiredShip": "cruiser",
-    "dungeonFloors": 7
+    "dungeonFloors": 7,
+    "firstReward": {
+      "resources": { "relics": 6, "tech": 300 },
+      "itemId": "tyranidChitin",
+      "itemName": "泰伦甲壳样本"
+    }
   },
   {
     "id": "warpRift",
@@ -45,7 +60,12 @@
     "energyCost": 500,
     "rewards": { "relics": 5, "alloys": 200 },
     "requiredShip": "battleBarge",
-    "dungeonFloors": 10
+    "dungeonFloors": 10,
+    "firstReward": {
+      "resources": { "relics": 15, "alloys": 600 },
+      "itemId": "warpShard",
+      "itemName": "亚空间裂隙碎片"
+    }
   },
   {
     "id": "forgeMars",
@@ -57,6 +77,11 @@
     "energyCost": 400,
     "rewards": { "alloys": 300, "tech": 300 },
     "requiredShip": "cruiser",
-    "dungeonFloors": 8
+    "dungeonFloors": 8,
+    "firstReward": {
+      "resources": { "alloys": 900, "tech": 900 },
+      "itemId": "stcFragment",
+      "itemName": "STC碎片"
+    }
   }
 ]

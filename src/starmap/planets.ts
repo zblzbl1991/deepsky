@@ -1,6 +1,12 @@
 import type { GameState } from '../game/gameState.js';
 import planetsData from '../data/planets.json' assert { type: 'json' };
 
+export interface FirstReward {
+  resources: Record<string, number>;
+  itemId: string;
+  itemName: string;
+}
+
 export interface PlanetDef {
   id: string;
   name: string;
@@ -12,6 +18,7 @@ export interface PlanetDef {
   rewards: Record<string, number>;
   requiredShip: string | null;
   dungeonFloors: number;
+  firstReward?: FirstReward;
 }
 
 const planets: PlanetDef[] = planetsData as unknown as PlanetDef[];
